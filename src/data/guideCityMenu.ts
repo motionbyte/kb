@@ -17,7 +17,6 @@ export type GuideMenuSection = {
   items: GuideMenuLeaf[]
 }
 
-const cityHub = (ctx: GuideMenuCtx) => `/city/${ctx.slug}`
 const cityScams = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-scams`
 const citySafetyTips = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-safety-tips`
 const cityEtiquette = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-etiquette`
@@ -53,6 +52,10 @@ const cityLocalMarkets = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-local-ma
 const cityHandicrafts = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-handicrafts`
 const citySouvenirs = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-souvenirs`
 const cityShoppingStreets = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-shopping-streets`
+const itineraryPlanner = (ctx: GuideMenuCtx) => `/itinerary?seed=${ctx.slug}&tab=builder`
+const itineraryPlannerBudget = (ctx: GuideMenuCtx) => `/itinerary?seed=${ctx.slug}&style=budget`
+const itineraryPlannerLuxury = (ctx: GuideMenuCtx) => `/itinerary?seed=${ctx.slug}&style=luxury`
+const itineraryPlannerRoute = (ctx: GuideMenuCtx) => `/itinerary?seed=${ctx.slug}&tab=route`
 /** Best time + famous-place accordions (where available) */
 const cityBestTimeAnchor = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-best-places`
 /** Dedicated festivals screen — top-level segment avoids router matching issues */
@@ -175,10 +178,10 @@ export const GUIDE_CITY_MENU_SECTIONS: GuideMenuSection[] = [
     icon: '🗺️',
     title: 'Itinerary Planning',
     items: [
-      { id: 'day-plans', label: 'Day-wise plans', href: cityHub },
-      { id: 'budget', label: 'Budget itinerary', href: cityHub },
-      { id: 'luxury', label: 'Luxury itinerary', href: cityHub },
-      { id: 'route', label: 'Route planning', href: cityHub },
+      { id: 'day-plans', label: 'Day-wise plans', href: itineraryPlanner },
+      { id: 'budget', label: 'Budget itinerary', href: itineraryPlannerBudget },
+      { id: 'luxury', label: 'Luxury itinerary', href: itineraryPlannerLuxury },
+      { id: 'route', label: 'Route planning', href: itineraryPlannerRoute },
     ],
   },
   {

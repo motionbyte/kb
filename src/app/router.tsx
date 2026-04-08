@@ -18,6 +18,7 @@ import { PlacesPage } from '@/pages/PlacesPage'
 import { RestaurantsPage } from '@/pages/RestaurantsPage'
 import { ShopComingSoonPage } from '@/pages/shop/ShopComingSoonPage'
 import { WeatherPage } from '@/pages/WeatherPage'
+import { ItineraryPlannerPage } from '@/pages/ItineraryPlannerPage'
 
 /** `/city/:slug/festivals` → `/festivals/:slug` (stable match on all routers) */
 function LegacyCityFestivalsUrlRedirect() {
@@ -49,6 +50,7 @@ export const router = createBrowserRouter([
       { path: 'places', element: <PlacesPage /> },
       { path: 'about', element: <AboutPage /> },
       { path: 'shop', element: <ShopComingSoonPage /> },
+      { path: 'itinerary', element: <ItineraryPlannerPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

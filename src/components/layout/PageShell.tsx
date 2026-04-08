@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { GuideHubMenu } from '@/components/features/GuideHubMenu'
 import { MaharanaMapScene } from '@/components/features/MaharanaMapScene'
@@ -16,12 +16,23 @@ export function PageShell() {
     location.pathname !== '/' ? 'browse' : 'cityPick',
   )
   const [selectedCitySlug, setSelectedCitySlug] = useState<string | null>(null)
+  const prevPathname = useRef<string | null>(null)
 
   useEffect(() => {
     if (location.pathname !== '/' && guideOpen) {
       setGuideFlow('browse')
     }
   }, [location.pathname, guideOpen])
+
+  /** SPA: navigating from the parchment home (`/`) into the planner must mount the guide shell */
+  useEffect(() => {
+    const prev = prevPathname.current
+    prevPathname.current = location.pathname
+    if (location.pathname === '/itinerary' && prev === '/') {
+      setGuideOpen(true)
+      setGuideFlow('browse')
+    }
+  }, [location.pathname])
 
   const openGuideFromDiscover = () => {
     setGuideOpen(true)
@@ -87,6 +98,7 @@ export function PageShell() {
     if (path === '/cities') return 'Cities'
     if (path === '/about') return 'About'
     if (path === '/shop') return 'Shop'
+    if (path === '/itinerary') return 'Itinerary'
     if (citySlugFromPath) {
       return getCityBySlug(citySlugFromPath)?.name ?? 'Guide'
     }
