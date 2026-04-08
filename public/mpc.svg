@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 560" fill="none" aria-hidden="true">
+  <!-- Line-art placeholder for landing hero (replaces missing mpc.png); gold strokes read with screen blend on parchment -->
+  <path
+    stroke="#e8c56c"
+    stroke-width="2.2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="M240 48 88 140v312h304V140L240 48Zm0 0v404M88 228h304M88 312h304M200 140h80v92h-80V140Zm-48 312V396h176v56"
+  />
+  <path stroke="#e8c56c" stroke-width="1.6" d="M120 396v56M360 396v56M200 452h80" opacity="0.85" />
+</svg>

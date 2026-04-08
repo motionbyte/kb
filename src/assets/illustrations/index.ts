@@ -1,0 +1,6 @@
+export { BandhaniPattern } from './BandhaniPattern'
+export { CamelIcon } from './CamelIcon'
+export { FortIcon } from './FortIcon'
+export { JharokhaIcon } from './JharokhaIcon'
+export { MarketIcon } from './MarketIcon'
+export { PlateIcon } from './PlateIcon'

@@ -1,0 +1,39 @@
+.city-adventure-page__subtitle {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-kesariya-deep);
+}
+
+.city-adventure-page__fallback {
+  margin: 0 0 var(--space-6);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.city-adventure-page__fallback a {
+  font-weight: 600;
+  color: var(--color-indigo);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.city-adventure-page__back {
+  margin: var(--space-8) 0 0;
+  text-align: center;
+}
+
+.city-adventure-page__back-link {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-indigo);
+  text-decoration: none;
+}
+
+.city-adventure-page__back-link:hover {
+  text-decoration: underline;
+}

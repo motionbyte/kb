@@ -1,0 +1,246 @@
+/* Emergency contacts — fast, tappable, high-contrast but on-brand */
+
+.city-emergency {
+  text-align: center;
+}
+
+.city-emergency__hero {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-5) var(--space-4);
+  border-radius: 0.55rem;
+  border: 2px solid rgba(212, 168, 75, 0.55);
+  background: linear-gradient(155deg, #fffefb 0%, #faf0dc 42%, #efd9b8 100%);
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.35),
+    0 12px 32px rgba(42, 24, 16, 0.1);
+}
+
+.city-emergency__hero-main {
+  margin: 0 0 var(--space-2);
+  font-size: clamp(1.15rem, 4vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-indigo);
+  font-family: var(--font-display);
+}
+
+.city-emergency__hero-sub {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: capitalize;
+  color: var(--color-kesariya-deep);
+}
+
+.city-emergency__lead {
+  margin: 0 0 var(--space-5);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--color-muted);
+  text-align: left;
+  max-width: 70ch;
+  margin-inline: auto;
+}
+
+.city-emergency__city {
+  font-weight: 600;
+  color: var(--color-ink-soft);
+}
+
+.city-emergency__tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  max-width: 72ch;
+  margin: 0 auto var(--space-5);
+}
+
+@media (min-width: 420px) {
+  .city-emergency__tiles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.city-emergency__tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: 4.25rem;
+  padding: var(--space-2);
+  border-radius: 0.45rem;
+  border: 1px solid rgba(212, 168, 75, 0.45);
+  background: linear-gradient(165deg, #fffefb 0%, #f5ead4 100%);
+  box-shadow: 0 2px 8px rgba(42, 24, 16, 0.06);
+  text-align: center;
+}
+
+.city-emergency__tile-label {
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.city-emergency__tile-value {
+  font-size: var(--text-xs);
+  font-weight: 900;
+  color: #8b4518;
+}
+
+.city-emergency__card {
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  border-radius: 0.55rem;
+  border: 2px solid rgba(42, 28, 18, 0.22);
+  background: linear-gradient(180deg, #fffefb 0%, #faf4e8 100%);
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.2),
+    0 10px 28px rgba(42, 24, 16, 0.07);
+  overflow: hidden;
+  text-align: left;
+}
+
+.city-emergency__card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: linear-gradient(90deg, rgba(224, 120, 44, 0.12) 0%, rgba(255, 254, 251, 0.9) 55%);
+  border-bottom: 1px solid rgba(42, 28, 18, 0.1);
+}
+
+.city-emergency__card-emoji {
+  flex-shrink: 0;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.city-emergency__card-title {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--color-indigo);
+}
+
+.city-emergency__card-sub {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.city-emergency__muted {
+  margin: 0;
+  padding: var(--space-4) var(--space-4) 0;
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--color-muted);
+}
+
+.city-emergency__bullets {
+  margin: 0;
+  padding: var(--space-4);
+  padding-left: calc(var(--space-4) + 0.9rem);
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--color-ink-soft);
+}
+
+.city-emergency__steps {
+  margin: 0;
+  padding: var(--space-4);
+  padding-left: calc(var(--space-4) + 1.1rem);
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--color-ink-soft);
+}
+
+.city-emergency__button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+@media (min-width: 720px) {
+  .city-emergency__button-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.city-emergency__btn {
+  display: grid;
+  gap: 0.15rem;
+  padding: var(--space-3);
+  border-radius: 0.55rem;
+  border: 1px solid rgba(180, 70, 50, 0.35);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 230, 224, 0.45) 100%);
+  text-decoration: none;
+  color: var(--color-ink);
+  box-shadow: 0 2px 10px rgba(42, 24, 16, 0.06);
+}
+
+.city-emergency__btn--soft {
+  border-color: rgba(90, 80, 110, 0.25);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 225, 245, 0.35) 100%);
+}
+
+.city-emergency__btn:hover {
+  filter: brightness(0.985);
+}
+
+.city-emergency__btn-k {
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.city-emergency__btn-v {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--color-indigo);
+}
+
+.city-emergency__btn-note {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  line-height: var(--leading-snug);
+}
+
+.city-emergency__notes {
+  margin: 0;
+  padding: 0 var(--space-4) var(--space-4);
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.city-emergency__notes li {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--color-muted);
+}
+
+.city-emergency__notes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fde68a, #d4a84b);
+  box-shadow: 0 0 0 2px rgba(212, 168, 75, 0.35);
+}
+

@@ -1,0 +1,423 @@
+import type { Attraction, AttractionCategory } from '@/types'
+import { cities } from '@/data/cities'
+
+function place(
+  id: string,
+  cityId: string,
+  name: string,
+  category: AttractionCategory,
+  shortDescription: string,
+  tags: string[],
+): Attraction {
+  return { id, slug: id, cityId, name, category, shortDescription, tags }
+}
+
+/** Hand-picked landmarks — remainder filled to 100 with district “curated picks”. */
+const MAJOR: Attraction[] = [
+  place(
+    'amber-fort',
+    'jaipur',
+    'Amber Fort',
+    'fort',
+    'Hilltop fort with Sheesh Mahal, courtyards, and Maota Lake views — Jaipur’s headline monument.',
+    ['UNESCO', 'Fort', 'Sunrise'],
+  ),
+  place(
+    'hawa-mahal',
+    'jaipur',
+    'Hawa Mahal',
+    'palace',
+    'Pink sandstone façade with lattice windows — best photographed from the street at golden hour.',
+    ['Architecture', 'Photo spot'],
+  ),
+  place(
+    'city-palace-jaipur',
+    'jaipur',
+    'City Palace (Jaipur)',
+    'palace',
+    'Royal residence complex with museums, courtyards, and textiles — plan 2–3 hours.',
+    ['Museum', 'Heritage'],
+  ),
+  place(
+    'jantar-mantar-jaipur',
+    'jaipur',
+    'Jantar Mantar (Jaipur)',
+    'museum',
+    'UNESCO astronomical instruments — a genius open-air observatory in the old city.',
+    ['UNESCO', 'Science', 'Heritage'],
+  ),
+  place(
+    'nahargarh-jaipur',
+    'jaipur',
+    'Nahargarh Fort',
+    'fort',
+    'Ridge fort with city-wide views — sunset crowds and wall walks.',
+    ['Views', 'Sunset'],
+  ),
+  place(
+    'jaigarh-jaipur',
+    'jaipur',
+    'Jaigarh Fort',
+    'fort',
+    'Cannon foundry lore and long Aravalli sightlines above Amber.',
+    ['Fort', 'History'],
+  ),
+  place(
+    'jal-mahal',
+    'jaipur',
+    'Jal Mahal',
+    'palace',
+    'Water palace in Man Sagar Lake — iconic from the embankment road.',
+    ['Lake', 'Photo spot'],
+  ),
+  place(
+    'albert-hall-jaipur',
+    'jaipur',
+    'Albert Hall Museum',
+    'museum',
+    'Indo-Saracenic building with arts, armour, and Egyptian mummy — Ram Niwas Garden setting.',
+    ['Museum', 'Architecture'],
+  ),
+  place(
+    'galtaji-jaipur',
+    'jaipur',
+    'Galtaji (Monkey Temple)',
+    'temple',
+    'Hilltop springs, pavilions, and pilgrim energy — go early for calm.',
+    ['Temple', 'Hills'],
+  ),
+  place(
+    'city-palace-udaipur',
+    'udaipur',
+    'City Palace (Udaipur)',
+    'palace',
+    'Sprawling palace overlooking Lake Pichola — marble, murals, and museum wings.',
+    ['Lake views', 'Museum'],
+  ),
+  place(
+    'lake-pichola',
+    'udaipur',
+    'Lake Pichola',
+    'lake',
+    'Boat rides, ghats, and reflections of palaces — the heart of Udaipur.',
+    ['Sunset', 'Boat'],
+  ),
+  place(
+    'jagdish-temple-udaipur',
+    'udaipur',
+    'Jagdish Temple',
+    'temple',
+    'Carved Indo-Aryan shrine above old city steps — busy at aarti.',
+    ['Temple', 'Architecture'],
+  ),
+  place(
+    'saheliyon-ki-bari',
+    'udaipur',
+    'Saheliyon Ki Bari',
+    'palace',
+    'Royal ladies’ garden with fountains and lotus pools — quiet contrast to ghats.',
+    ['Garden', 'Heritage'],
+  ),
+  place(
+    'monsoon-palace-udaipur',
+    'udaipur',
+    'Monsoon Palace (Sajjangarh)',
+    'palace',
+    'Hilltop sunset point over the lakes — panoramic and windy.',
+    ['Views', 'Sunset'],
+  ),
+  place(
+    'bagore-ki-haveli',
+    'udaipur',
+    'Bagore Ki Haveli',
+    'museum',
+    'Courtyard haveli with cultural shows and royal chambers facing the lake.',
+    ['Heritage', 'Culture'],
+  ),
+  place(
+    'mehrangarh',
+    'jodhpur',
+    'Mehrangarh Fort',
+    'fort',
+    'One of India’s largest forts — museums, ramparts, and blue-city panoramas.',
+    ['Fort', 'Museum'],
+  ),
+  place(
+    'jaswant-thada',
+    'jodhpur',
+    'Jaswant Thada',
+    'temple',
+    'Marble cenotaph with gardens — quiet contrast to Mehrangarh’s scale.',
+    ['Marble', 'Peaceful'],
+  ),
+  place(
+    'clock-tower-market',
+    'jodhpur',
+    'Clock Tower (Ghanta Ghar) Market',
+    'market',
+    'Spices, textiles, and street snacks — Jodhpur’s liveliest bazaar hub.',
+    ['Shopping', 'Street food'],
+  ),
+  place(
+    'mandore-gardens',
+    'jodhpur',
+    'Mandore Gardens',
+    'temple',
+    'Royal cenotaphs in landscaped gardens — less crowded than the fort trail.',
+    ['Garden', 'History'],
+  ),
+  place(
+    'jaisalmer-fort',
+    'jaisalmer',
+    'Jaisalmer Fort (Sonar Quila)',
+    'fort',
+    'Living desert fort — lanes, Jain temples, and sunset ramparts.',
+    ['UNESCO', 'Desert'],
+  ),
+  place(
+    'patwon-ki-haveli',
+    'jaisalmer',
+    'Patwon Ki Haveli',
+    'palace',
+    'Cluster of merchant mansions with carved screens — museum interiors.',
+    ['Haveli', 'Architecture'],
+  ),
+  place(
+    'gadisar-lake',
+    'jaisalmer',
+    'Gadisar Lake',
+    'lake',
+    'Desert oasis with ghats and boat rides — migratory birds in season.',
+    ['Lake', 'Sunrise'],
+  ),
+  place(
+    'junagarh-bikaner',
+    'bikaner',
+    'Junagarh Fort',
+    'fort',
+    'Palatial fort that was never taken — lavish courtyards and museum rooms.',
+    ['Fort', 'Museum'],
+  ),
+  place(
+    'lalgarh-palace-bikaner',
+    'bikaner',
+    'Lalgarh Palace',
+    'palace',
+    'Red sandstone royal residence — hotel wings and museum corners.',
+    ['Heritage', 'Architecture'],
+  ),
+  place(
+    'karni-mata-deshnoke',
+    'bikaner',
+    'Karni Mata Temple (Deshnoke)',
+    'temple',
+    'Famous rat-temple day trip from Bikaner — unique pilgrimage etiquette.',
+    ['Temple', 'Pilgrimage'],
+  ),
+  place(
+    'ajmer-sharif',
+    'ajmer',
+    'Ajmer Sharif Dargah',
+    'temple',
+    'Chishti shrine at the heart of the city — qawwali evenings and marble courts.',
+    ['Sufi', 'Pilgrimage'],
+  ),
+  place(
+    'ana-sagar',
+    'ajmer',
+    'Ana Sagar Lake',
+    'lake',
+    'Historic embankment walks and sunset crowds — marble pavilions on the rim.',
+    ['Lake', 'Evening'],
+  ),
+  place(
+    'adhai-din-ka-jhonpra',
+    'ajmer',
+    'Adhai Din ka Jhonpra',
+    'temple',
+    'Ornate screen mosque ruin — layered history and strong photo geometry.',
+    ['ASI', 'Architecture'],
+  ),
+  place(
+    'pushkar-lake-ghats',
+    'ajmer',
+    'Pushkar Sarovar & ghats',
+    'lake',
+    'Sacred lake with Brahma lore — ghats busiest at Kartik and evenings.',
+    ['Tirth', 'Sunset'],
+  ),
+  place(
+    'chittorgarh-fort',
+    'chittorgarh',
+    'Chittorgarh Fort',
+    'fort',
+    'Massive hill fort with towers and tales — full-day exploration.',
+    ['UNESCO', 'Epic'],
+  ),
+  place(
+    'vijay-stambh',
+    'chittorgarh',
+    'Vijay Stambh',
+    'temple',
+    'Victory tower with intricate sculpture — climb for views if open.',
+    ['Tower', 'History'],
+  ),
+  place(
+    'ranthambhore-fort',
+    'sawai-madhopur',
+    'Ranthambhore Fort',
+    'fort',
+    'Forest fort inside the national park — combine with safari planning.',
+    ['Wildlife', 'History'],
+  ),
+  place(
+    'keoladeo-ghana',
+    'bharatpur',
+    'Keoladeo National Park',
+    'lake',
+    'World-class bird sanctuary — winter migrants and cycle paths.',
+    ['UNESCO', 'Birds'],
+  ),
+  place(
+    'bala-quila-alwar',
+    'alwar',
+    'Bala Quila (Alwar Fort)',
+    'fort',
+    'Long ridge fort above Alwar — steep drive and wide Aravalli views.',
+    ['Fort', 'Views'],
+  ),
+  place(
+    'dilwara-temples',
+    'sirohi',
+    'Dilwara Temples',
+    'temple',
+    'Marble Jain temples on Mount Abu — carving detail among India’s finest.',
+    ['Jain', 'Marble'],
+  ),
+  place(
+    'nakki-lake',
+    'sirohi',
+    'Nakki Lake',
+    'lake',
+    'Hill station lake with walks and sunset boat mood — cool evenings.',
+    ['Lake', 'Hill station'],
+  ),
+  place(
+    'taragarh-bundi',
+    'bundi',
+    'Taragarh Fort (Bundi)',
+    'fort',
+    'Steep climb to palace ruins — painterly old town views.',
+    ['Fort', 'Hike'],
+  ),
+  place(
+    'raniji-ki-baori',
+    'bundi',
+    'Raniji ki Baori',
+    'museum',
+    'Ornate stepwell in the town core — graphic depth and cool air.',
+    ['Stepwell', 'Architecture'],
+  ),
+  place(
+    'kumbhalgarh-fort',
+    'rajsamand',
+    'Kumbhalgarh Fort',
+    'fort',
+    'Great wall of the Aravallis — sunset walks on the ramparts.',
+    ['Fort', 'Views'],
+  ),
+  place(
+    'nahargarh-fort-nagaur',
+    'nagaur',
+    'Ahhichatragarh Fort (Nagaur)',
+    'fort',
+    'Restored palace-fort with Sufi fairgrounds — quieter than Jaipur’s forts.',
+    ['Fort', 'Heritage'],
+  ),
+  place(
+    'garh-palace-kota',
+    'kota',
+    'Garh Palace (Kota)',
+    'palace',
+    'Riverside palace complex with murals — museum wings and river breezes.',
+    ['Palace', 'Museum'],
+  ),
+  place(
+    'seven-wonders-kota',
+    'kota',
+    'Seven Wonders Park',
+    'museum',
+    'Miniature world monuments — family evening outing by the river.',
+    ['Park', 'Family'],
+  ),
+  place(
+    'juna-mahal-dungarpur',
+    'dungarpur',
+    'Juna Mahal',
+    'palace',
+    'Seven-storey palace with fresco rooms — tribal-region royal aesthetic.',
+    ['Palace', 'Art'],
+  ),
+  place(
+    'ranakpur-temple',
+    'pali',
+    'Ranakpur Jain Temple',
+    'temple',
+    'Forest of marble pillars — day trip from Udaipur/Jodhpur routes.',
+    ['Jain', 'Architecture'],
+  ),
+  place(
+    'mehandipur-balaji',
+    'dausa',
+    'Mehandipur Balaji Temple',
+    'temple',
+    'Intense devotional centre — read etiquette before visiting.',
+    ['Temple', 'Pilgrimage'],
+  ),
+]
+
+function padTo100(major: Attraction[]): Attraction[] {
+  const out = [...major]
+  if (out.length >= 100) return out.slice(0, 100)
+
+  const cats: AttractionCategory[] = ['fort', 'palace', 'temple', 'lake', 'market', 'museum']
+  const seeds = [
+    'Heritage gate',
+    'Old stepwell',
+    'Sunset viewpoint',
+    'Sacred tank',
+    'Craft bazaar',
+    'Town museum',
+    'River ghat',
+    'Haveli lane',
+    'Hill shrine',
+    'Desert outpost',
+    'Garden tomb',
+    'City ramparts',
+  ]
+  let i = 0
+  while (out.length < 100) {
+    const city = cities[i % cities.length]
+    const cat = cats[i % cats.length]
+    const seed = seeds[i % seeds.length]
+    const id = `curated-${city.id}-${i}`
+    out.push(
+      place(
+        id,
+        city.id,
+        `${seed} — ${city.name} district`,
+        cat,
+        `Curated pick in ${city.name} — confirm opening days, tickets, and dress codes with locals or Rajasthan Tourism.`,
+        ['Curated', 'District'],
+      ),
+    )
+    i += 1
+  }
+  return out.slice(0, 100)
+}
+
+export const attractions: Attraction[] = padTo100(MAJOR)
+
+export function getAttractionsByCity(cityId: string): Attraction[] {
+  return attractions.filter((a) => a.cityId === cityId)
+}

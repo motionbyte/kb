@@ -1,0 +1,136 @@
+/* Custom dropdown — city name + region only (no taglines in the list) */
+.guide-city-dd {
+  position: relative;
+  width: 100%;
+  max-width: min(420px, 100%);
+  margin: 0 auto;
+}
+
+.guide-city-dd__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 52px;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid rgba(42, 28, 18, 0.45);
+  border-radius: 0.4rem;
+  background: linear-gradient(180deg, #faf4e8 0%, #f0e6d4 48%, #e8dcc6 100%);
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.28),
+    0 3px 0 rgba(255, 248, 230, 0.5) inset,
+    0 10px 22px rgba(42, 24, 16, 0.12);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2a1810;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.guide-city-dd__trigger:hover {
+  border-color: rgba(42, 28, 18, 0.58);
+}
+
+.guide-city-dd__trigger:focus-visible {
+  outline: 3px solid var(--color-indigo);
+  outline-offset: 2px;
+}
+
+.guide-city-dd__trigger-label {
+  text-align: left;
+}
+
+.guide-city-dd__chevron {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  opacity: 0.75;
+}
+
+.guide-city-dd__panel {
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  max-height: min(52dvh, 420px);
+  overflow: hidden;
+  border-radius: 0.4rem;
+  border: 2px solid rgba(42, 28, 18, 0.42);
+  background: #faf6ee;
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.25),
+    0 18px 40px rgba(42, 24, 16, 0.22);
+}
+
+.guide-city-dd__list {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-2);
+  max-height: min(52dvh, 420px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.guide-city-dd__option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-2);
+  border: 1px solid rgba(42, 28, 18, 0.28);
+  border-radius: 0.35rem;
+  background: linear-gradient(180deg, #fffefb 0%, #f5ecdc 100%);
+  box-shadow: 0 4px 12px rgba(42, 24, 16, 0.08);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.guide-city-dd__list li:last-child .guide-city-dd__option {
+  margin-bottom: 0;
+}
+
+.guide-city-dd__option:hover {
+  border-color: rgba(42, 28, 18, 0.45);
+  background: linear-gradient(180deg, #fffefb 0%, #f0e4d0 100%);
+}
+
+.guide-city-dd__option:focus-visible {
+  outline: 2px solid var(--color-indigo);
+  outline-offset: 2px;
+}
+
+.guide-city-dd__name {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #1a1410;
+}
+
+.guide-city-dd__region {
+  margin-top: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a4a32;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-city-dd__trigger,
+  .guide-city-dd__option {
+    transition: none;
+  }
+}

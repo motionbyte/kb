@@ -1,0 +1,206 @@
+/* Accordion / custom dropdown — parchment triggers (not native <select>) */
+.guide-city-cat {
+  width: 100%;
+  max-width: min(620px, 100%);
+  margin: 0 auto;
+  padding: 0 var(--space-2) var(--space-4);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.guide-city-cat__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.guide-city-cat__block--spaced {
+  margin-top: var(--space-3);
+}
+
+.guide-city-cat__rule {
+  height: 1px;
+  margin: 0 0 var(--space-3);
+  background: rgba(42, 28, 18, 0.1);
+  border: none;
+}
+
+/* Trigger — same family as GuideCityDropdown (cream, gold rim, raised) */
+.guide-city-cat__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 58px;
+  padding: var(--space-3) var(--space-5);
+  border: 2px solid rgba(42, 28, 18, 0.4);
+  border-radius: 0.55rem;
+  background: linear-gradient(180deg, #fffdf8 0%, #f5ead7 48%, #eadcc3 100%);
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.3),
+    0 3px 0 rgba(255, 248, 230, 0.55) inset,
+    0 10px 22px rgba(42, 24, 16, 0.12);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+}
+
+.guide-city-cat__trigger:hover {
+  border-color: rgba(42, 28, 18, 0.58);
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.45),
+    0 3px 0 rgba(255, 248, 230, 0.58) inset,
+    0 12px 24px rgba(42, 24, 16, 0.14);
+}
+
+.guide-city-cat__trigger:focus-visible {
+  outline: 2px solid rgba(212, 168, 75, 0.92);
+  outline-offset: 2px;
+}
+
+.guide-city-cat__trigger--open {
+  border-color: rgba(212, 168, 75, 0.55);
+  border-radius: 0.55rem 0.55rem 0 0;
+  border-bottom-color: rgba(42, 28, 18, 0.12);
+  background: linear-gradient(180deg, #fffefb 0%, #f4e9d8 55%, #eadfc9 100%);
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.4),
+    0 3px 0 rgba(255, 248, 230, 0.55) inset,
+    0 6px 16px rgba(42, 24, 16, 0.12);
+}
+
+.guide-city-cat__trigger-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  text-align: left;
+}
+
+.guide-city-cat__icon {
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.guide-city-cat__trigger-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.8vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #1a1410;
+  line-height: var(--leading-snug);
+}
+
+.guide-city-cat__chevron {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  opacity: 0.72;
+  color: #2a1810;
+}
+
+/* Expand/collapse — smooth height */
+.guide-city-cat__panel-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s var(--ease-sheet);
+}
+
+.guide-city-cat__panel-wrap.is-open {
+  grid-template-rows: 1fr;
+}
+
+.guide-city-cat__panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.guide-city-cat__panel-wrap:not(.is-open) .guide-city-cat__panel-inner {
+  pointer-events: none;
+}
+
+/* Inner panel — drops from trigger like a custom dropdown sheet */
+.guide-city-cat__list {
+  margin: 0;
+  padding: var(--space-3) var(--space-5) var(--space-5);
+  list-style: none;
+  border: 2px solid rgba(42, 28, 18, 0.45);
+  border-top: none;
+  border-radius: 0 0 0.55rem 0.55rem;
+  background: linear-gradient(180deg, rgba(255, 254, 251, 0.98) 0%, #f5ecdc 100%);
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.2),
+    inset 0 2px 8px rgba(42, 24, 16, 0.05);
+}
+
+.guide-city-cat__panel-wrap.is-open .guide-city-cat__list {
+  /* Keep long menus contained; scroll inside the opened sheet */
+  max-height: min(52dvh, 420px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.guide-city-cat__list li {
+  margin-bottom: var(--space-2);
+  padding-left: var(--space-3);
+  position: relative;
+}
+
+.guide-city-cat__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(212, 168, 75, 0.85);
+  box-shadow: 0 0 0 1px rgba(42, 28, 18, 0.15);
+}
+
+.guide-city-cat__list li:last-child {
+  margin-bottom: 0;
+}
+
+.guide-city-cat__link {
+  display: block;
+  width: 100%;
+  padding: var(--space-1) 0;
+  margin: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: clamp(1.05rem, 2.1vw, 1.2rem);
+  font-weight: 600;
+  line-height: var(--leading-relaxed);
+  color: rgba(26, 20, 16, 0.9);
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.guide-city-cat__link:hover {
+  color: var(--color-kesariya-deep);
+}
+
+.guide-city-cat__link:focus-visible {
+  outline: 2px solid rgba(212, 168, 75, 0.92);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-city-cat__panel-wrap {
+    transition: none;
+  }
+
+  .guide-city-cat__trigger,
+  .guide-city-cat__link {
+    transition: none;
+  }
+}
