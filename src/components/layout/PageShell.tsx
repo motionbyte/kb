@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { AssistantProvider } from '@/components/assistant/AssistantProvider'
 import { GuideHubMenu } from '@/components/features/GuideHubMenu'
 import { MaharanaMapScene } from '@/components/features/MaharanaMapScene'
 import { getCityBySlug } from '@/data/cities'
@@ -133,6 +134,7 @@ export function PageShell() {
   const isHub = guideOpen && !isBrowse
 
   return (
+    <AssistantProvider>
     <div
       className={cn(
         'page-shell',
@@ -347,6 +349,7 @@ export function PageShell() {
         </article>
       </div>
     </div>
+    </AssistantProvider>
   )
 }
 
