@@ -98,14 +98,13 @@
   /* Must be a bounded flex column so inner scroll areas can work in hub mode too */
   display: flex;
   flex-direction: column;
-  min-height: min(88dvh, 860px);
-  max-height: calc(100dvh - 2 * var(--space-3));
-}
-
-@media (min-width: 48rem) {
-  .page-shell__parchment-card--guide {
-    max-height: calc(100dvh - 2 * var(--space-4));
-  }
+  border-radius: 0;
+  min-height: calc(
+    100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+  );
+  max-height: calc(
+    100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+  );
 }
 
 /* Full book spread only after picking a category (browse) */
@@ -125,14 +124,13 @@
 .page-shell__parchment-card--guide.page-shell__parchment-card--browse {
   display: flex;
   flex-direction: column;
-  min-height: min(88dvh, 860px);
-  max-height: calc(100dvh - 2 * var(--space-3));
-}
-
-@media (min-width: 48rem) {
-  .page-shell__parchment-card--guide.page-shell__parchment-card--browse {
-    max-height: calc(100dvh - 2 * var(--space-4));
-  }
+  border-radius: 0;
+  min-height: calc(
+    100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+  );
+  max-height: calc(
+    100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+  );
 }
 
 .page-shell__parchment-card--browse .page-shell__layer--guide {
@@ -159,7 +157,9 @@
 .page-shell__layer--guide {
   grid-area: 1 / 1;
   min-width: 0;
-  min-height: min(88dvh, 860px);
+  min-height: calc(
+    100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+  );
   display: flex;
   flex-direction: column;
   z-index: 2;
@@ -168,7 +168,9 @@
 
 /* Hub = one scrollable “page” inside the same parchment card */
 .page-shell__layer--hub-sheet {
-  min-height: min(88dvh, 860px);
+  min-height: calc(
+    100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+  );
 }
 
 .page-shell__hub-sheet {
@@ -308,6 +310,21 @@
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   padding-bottom: var(--space-4);
+}
+
+/* Choose-a-city: short content — balance vertical space (avoid huge empty band below dropdown) */
+.page-shell__hub-scroll--city-pick {
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  padding-top: clamp(var(--space-3), 4vh, var(--space-6));
+  padding-bottom: clamp(var(--space-3), 4vh, var(--space-6));
+  box-sizing: border-box;
+}
+
+.page-shell__hub-scroll--city-pick > * {
+  width: 100%;
+  flex-shrink: 0;
 }
 
 .page-shell__parchment-head {
@@ -488,26 +505,14 @@
 /* --- Guide open: same card + soft desk + map (morph in place, no new popup) --- */
 .page-shell--guide {
   justify-content: flex-start;
-  padding: var(--space-3) max(var(--space-3), env(safe-area-inset-right)) var(--space-3)
-    max(var(--space-3), env(safe-area-inset-left));
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
 }
 
-/* City/category hub: full width, light gutters */
+/* City/category hub: full width — safe-area gutters only (edge-to-edge app shell) */
 .page-shell--guide-in-box {
-  padding: var(--space-3) max(var(--space-3), env(safe-area-inset-left))
-    max(var(--space-3), env(safe-area-inset-right));
-}
-
-@media (min-width: 48rem) {
-  .page-shell--guide {
-    padding: var(--space-4) max(var(--space-5), env(safe-area-inset-left))
-      max(var(--space-5), env(safe-area-inset-right));
-  }
-
-  .page-shell--guide-in-box {
-    padding: var(--space-4) max(var(--space-6), env(safe-area-inset-left))
-      max(var(--space-6), env(safe-area-inset-right));
-  }
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
 }
 
 .page-shell__scrim--guide {

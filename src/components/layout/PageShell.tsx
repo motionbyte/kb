@@ -253,7 +253,12 @@ export function PageShell() {
                     <span>The Map</span>
                   </button>
                 </div>
-                <div className="page-shell__hub-scroll">
+                <div
+                  className={cn(
+                    'page-shell__hub-scroll',
+                    guideFlow === 'cityPick' && 'page-shell__hub-scroll--city-pick',
+                  )}
+                >
                   <GuideHubMenu
                     step={guideFlow === 'cityPick' ? 'cities' : 'categories'}
                     selectedCitySlug={selectedCitySlug}
