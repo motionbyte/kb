@@ -2,6 +2,8 @@
  * Hands-on workshops — cooking, craft, art. Confirm schedules with hosts; many run seasonally.
  */
 
+import { getCityLandmarkCentre } from '@/data/cityPhotographyLandmarkRows'
+
 export type WorkshopContact = {
   id: string
   label: string
@@ -280,18 +282,8 @@ const ajmerWorkshops: CityWorkshopsBundle = {
   ],
 }
 
-function cityPin(slug: string): { latitude: number; longitude: number } {
-  const pins: Record<string, { latitude: number; longitude: number }> = {
-    jaipur: { latitude: 26.9124, longitude: 75.7873 },
-    udaipur: { latitude: 24.5854, longitude: 73.7125 },
-    jodhpur: { latitude: 26.2389, longitude: 73.0243 },
-    ajmer: { latitude: 26.4499, longitude: 74.6399 },
-  }
-  return pins[slug] ?? { latitude: 26.85, longitude: 74.5 }
-}
-
 function genericWorkshops(cityName: string, slug: string): CityWorkshopsBundle {
-  const pin = cityPin(slug)
+  const pin = getCityLandmarkCentre(slug)
   const mk = (
     id: string,
     name: string,
@@ -329,7 +321,7 @@ function genericWorkshops(cityName: string, slug: string): CityWorkshopsBundle {
     citySlug: slug,
     leadTitle: `Workshops in ${cityName}`,
     leadParagraphs: [
-      `${cityName} — category starters below. Ajmer has the richest curated list in this app today; other cities use the same structure until we add local pins.`,
+      `${cityName} — same workshop categories as our full templates: cooking, textiles, clay, metal, lens & story. Hosts and hotel desks vary by season — call ahead in peak months.`,
       'Prefer kitchens and studios with clear cancellation policies; avoid paying 100% upfront to unknown WhatsApp numbers.',
     ],
     authorityContacts: [rajTourism],

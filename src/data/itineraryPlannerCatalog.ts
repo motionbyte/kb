@@ -1,4 +1,4 @@
-import { AJMER_EXTRA_PLACES, AJMER_PLACES_BY_SUB } from '@/data/itineraryAjmerPlaces'
+import { ALL_ITINERARY_EXTRA_PLACES, ITINERARY_PLACES_BY_CITY } from '@/data/itineraryPlaces'
 
 /**
  * Visual activity tiles + per-category sub-options for the itinerary builder.
@@ -167,7 +167,7 @@ for (const list of Object.values(PLACES_BY_SUB_OPTION)) {
     placeById.set(p.id, p)
   }
 }
-for (const p of AJMER_EXTRA_PLACES) {
+for (const p of ALL_ITINERARY_EXTRA_PLACES) {
   placeById.set(p.id, p)
 }
 
@@ -179,12 +179,10 @@ export function placesForSubOption(subOptionId: string): PlannerPlace[] {
   return PLACES_BY_SUB_OPTION[subOptionId] ?? []
 }
 
-/** City-specific pins (e.g. Ajmer forts) when defined; otherwise generic three-line templates. */
+/** City-specific pins when defined; otherwise generic three-line templates. */
 export function placesForSubOptionInCity(citySlug: string, subOptionId: string): PlannerPlace[] {
-  if (citySlug === 'ajmer') {
-    const override = AJMER_PLACES_BY_SUB[subOptionId]
-    if (override?.length) return override
-  }
+  const override = ITINERARY_PLACES_BY_CITY[citySlug]?.[subOptionId]
+  if (override?.length) return override
   return placesForSubOption(subOptionId)
 }
 

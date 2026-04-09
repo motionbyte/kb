@@ -1,3 +1,6 @@
+import { getCityBySlug } from '@/data/cities'
+import { getCitySafetyBySlug, type HospitalEntry } from '@/data/citySafety'
+
 export type HospitalKind = 'Government' | 'Private'
 
 export type VerifiedHospital = {
@@ -188,8 +191,56 @@ const AJMER_HOSPITALS: HospitalsGuideBundle = {
   ],
 }
 
+function hospitalEntryToVerified(h: HospitalEntry, cityName: string): VerifiedHospital {
+  const lower = h.name.toLowerCase()
+  const isGovt =
+    /government|govt|district hospital|medical college|chc|phc|ayush|community health|primary health/i.test(
+      lower,
+    ) || lower.includes('district hospital')
+  const mapUrl =
+    h.latitude != null && h.longitude != null
+      ? `https://www.google.com/maps/search/?api=1&query=${h.latitude},${h.longitude}`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${h.name} ${cityName} Rajasthan India`)}`
+
+  return {
+    id: `hosp-${h.id}`,
+    name: h.name,
+    kind: isGovt ? 'Government' : 'Private',
+    area: h.area ?? cityName,
+    address: [h.name, h.area, cityName, 'Rajasthan, India'].filter(Boolean).join(', '),
+    phone: h.phone,
+    website: h.website,
+    mapUrl,
+    englishSupportLikely: 'Medium',
+    notes: ['Planning reference — confirm phone, casualty, and hours on arrival.'],
+    sourceLabel: h.website ? 'Listed link' : undefined,
+    sourceUrl: h.website,
+  }
+}
+
+function genericHospitalsGuide(cityName: string, slug: string): HospitalsGuideBundle {
+  const safety = getCitySafetyBySlug(slug)
+  const hospitals = (safety?.hospitals ?? []).map((h) => hospitalEntryToVerified(h, cityName))
+
+  return {
+    ...AJMER_HOSPITALS,
+    intro: {
+      ...AJMER_HOSPITALS.intro,
+      lead:
+        `When you are unwell, you need speed, clarity, and trust. This page helps you choose the right facility in ${cityName}, reduce overcharging risk, and handle language barriers.`,
+    },
+    verifiedList: {
+      title: `Hospitals — ${cityName}`,
+      lead: `Tap Call / Map. In an emergency, go to the nearest sensible facility first — **112** / **108**. Listings align with our safety guide for ${cityName}; verify locally.`,
+      hospitals,
+    },
+  }
+}
+
 export function getHospitalsGuideByCitySlug(slug: string): HospitalsGuideBundle {
   if (slug === 'ajmer') return AJMER_HOSPITALS
-  return AJMER_HOSPITALS
+  const city = getCityBySlug(slug)
+  if (!city) return AJMER_HOSPITALS
+  return genericHospitalsGuide(city.name, slug)
 }
 

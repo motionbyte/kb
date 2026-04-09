@@ -3,7 +3,7 @@ import type {
   CityInstagramSpotsBundle,
   InstagramSpotCategory,
   InstagramSpotEntry,
-} from '@/data/cityInstagramSpots'
+} from '@/data/cityInstagramSpots.types'
 import { exclusiveAccordionToggle } from '@/lib/exclusiveAccordion'
 import { cn } from '@/lib/cn'
 import { PhotoSpotMapRow } from '@/components/features/PhotoSpotMapRow'

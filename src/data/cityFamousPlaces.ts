@@ -6,34 +6,10 @@
  *
  * `VisitHoursInfo.source`: `official` = archaeology / shrine / museum notices; `community` = typical Google Maps & travel-aggregator patterns — always verify at the gate.
  */
-export type VisitHoursSource = 'official' | 'community'
+import type { FamousPlace } from '@/data/cityFamousPlaces.types'
+import { REST_FAMOUS_BY_SLUG } from '@/data/cityFamousPlacesRest'
 
-export type VisitHoursInfo = {
-  /** Primary “open / ticket” line */
-  summary: string
-  /** Season splits, closed days, lunch break, etc. */
-  lines?: string[]
-  source: VisitHoursSource
-  /** Verification hint */
-  note?: string
-}
-
-export type FamousPlace = {
-  id: string
-  name: string
-  /** Shown on the collapsed row (optional) */
-  teaser?: string
-  paragraphs: string[]
-  imageSrc: string
-  imageAlt: string
-  /** WGS84 — pin for “Open in Maps” */
-  latitude: number
-  longitude: number
-  /** Best months & time-of-day for this specific site */
-  bestTimeHighlight?: string
-  /** Public / ticket hours where applicable */
-  visitHours?: VisitHoursInfo
-}
+export type { FamousPlace, VisitHoursInfo, VisitHoursSource } from '@/data/cityFamousPlaces.types'
 
 /** 1280px-wide thumbnails — same pattern Commons uses for predictable hotlinking */
 const DARGAH =
@@ -63,6 +39,131 @@ const RANGJI_PUSHKAR =
 
 const VARAHA_LAKE_PUSHKAR =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Pushkar%2C_India%2C_Pushkar_Lake_and_Ghats.jpg/1280px-Pushkar%2C_India%2C_Pushkar_Lake_and_Ghats.jpg'
+
+/** Alwar — Wikimedia Commons thumbs (1280px) */
+const ALWAR_FORT =
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/AlwarFort.jpg/1280px-AlwarFort.jpg'
+const ALWAR_PALACE =
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Alwar_Palace_-_Outside_View.jpg/1280px-Alwar_Palace_-_Outside_View.jpg'
+const MOOSI_CHHATRI =
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Moosi_Maharani_Ki_Chhatri.jpg/1280px-Moosi_Maharani_Ki_Chhatri.jpg'
+const SILISERH_LAKE =
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Siliserh_Lake%2CAlwar_1.jpg/1280px-Siliserh_Lake%2CAlwar_1.jpg'
+const SARISKA_NP =
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Sariska_National_Park.jpg/1280px-Sariska_National_Park.jpg'
+
+const alwarPlaces: FamousPlace[] = [
+  {
+    id: 'bala-quila',
+    name: 'Bala Quila (Alwar Fort)',
+    teaser: 'Ridge fort · city & Aravalli views',
+    paragraphs: [
+      'One of the longest hill forts in Rajasthan, Bala Quila crowns the forested ridge above Alwar — massive walls, bastions, and gates that frame views over the town and the eastern Aravallis. The climb or drive rewards early starts: winter light is kind on the masonry; summer visits need sunrise slots and water.',
+      'Combine with a slow descent into the old lanes — the fort is the orientation point for understanding Alwar as a former princely capital rather than a highway pit stop.',
+    ],
+    imageSrc: ALWAR_FORT,
+    imageAlt: 'Bala Quila — Alwar Fort walls on the Aravalli ridge',
+    latitude: 27.5547,
+    longitude: 76.6125,
+    bestTimeHighlight:
+      'October–March · mornings for clear air and photos; avoid midday on open ramparts April–June.',
+    visitHours: {
+      summary:
+        'Ticketed ASI / state monument — commonly listed ~10:00 AM–4:30 PM (gates may open slightly earlier in peak season).',
+      lines: ['Closed on Fridays for some heritage sites in Rajasthan — confirm locally.', 'Last entry often ~30–45 minutes before closing.'],
+      source: 'community',
+      note: 'Aggregator & state tourism listings vary — read the board at the ticket counter.',
+    },
+  },
+  {
+    id: 'city-palace-alwar',
+    name: 'City Palace (Vinay Vilas Mahal) & Museum',
+    teaser: 'Princely complex · armour & manuscripts',
+    paragraphs: [
+      'The City Palace anchors central Alwar — courtyards, wings from different eras, and a museum that holds armour, manuscripts, and royal memorabilia from the Naruka court. Good for history-first visitors who want context before Sariska or Siliserh day legs.',
+      'Footwear rules and photography fees may apply in museum rooms — carry cash for small tickets and ask before flash.',
+    ],
+    imageSrc: ALWAR_PALACE,
+    imageAlt: 'City Palace Alwar — exterior facade of the princely complex',
+    latitude: 27.5639,
+    longitude: 76.6037,
+    bestTimeHighlight:
+      'October–March · late morning for museum galleries before afternoon heat.',
+    visitHours: {
+      summary:
+        'Museum / palace visitor hours often ~10:00 AM–4:30 PM; closed Mondays & public holidays per common Rajasthan museum pattern.',
+      lines: ['Separate tickets may apply for palace precinct vs museum block — check at window.'],
+      source: 'community',
+      note: 'Match timings with district tourism / notice board — festival VIP visits can alter access.',
+    },
+  },
+  {
+    id: 'moosi-chhatri',
+    name: 'Moosi Maharani Ki Chhatri',
+    teaser: 'Lake-edge cenotaphs · frescoed domes',
+    paragraphs: [
+      'These twin cenotaphs honour rulers and Maharani Moosi beside Sagar — Bengal-roof pavilions, carved columns, and mirror-work interiors that catch the low sun. A short stop that pairs naturally with the City Palace circuit on foot or by auto.',
+      'Respect cremation-memory etiquette; photography may be limited inside — follow caretaker signs.',
+    ],
+    imageSrc: MOOSI_CHHATRI,
+    imageAlt: 'Moosi Maharani Ki Chhatri — cenotaph domes at Alwar',
+    latitude: 27.5641,
+    longitude: 76.6035,
+    bestTimeHighlight:
+      'October–March · golden hour for domes and tank reflections; quick visit 30–45 minutes.',
+    visitHours: {
+      summary:
+        'Outdoor monument — commonly visited roughly 9:00 AM–5:00 PM; inner chambers may lock earlier.',
+      lines: ['Best combined with City Palace same half-day.'],
+      source: 'community',
+      note: 'No single national portal — timings from maps & local guides; confirm on arrival.',
+    },
+  },
+  {
+    id: 'siliserh-lake',
+    name: 'Siliserh Lake & Palace',
+    teaser: 'Hill reservoir · pavilion & boating',
+    paragraphs: [
+      'A short run northwest of the city, Siliserh wraps a royal pavilion at the water’s edge — monsoon fills the tank; winter afternoons are pleasant for boating and long views across scrub and hills. Picnic and sunset friendly when water levels cooperate.',
+      'Weekends draw Delhi–Jaipur traffic — arrive early for parking; carry sun cover on the open embankment.',
+    ],
+    imageSrc: SILISERH_LAKE,
+    imageAlt: 'Siliserh Lake near Alwar with palace pavilion',
+    latitude: 27.794,
+    longitude: 76.305,
+    bestTimeHighlight:
+      'July–September for fullest water; October–March for boating breeze · 4:00–6:00 PM light is soft.',
+    visitHours: {
+      summary:
+        'Lake & palace precinct — ticketed access commonly ~10:00 AM–5:30 PM (boating extra, weather-dependent).',
+      lines: ['Monsoon closure possible if embankment unsafe — ask locally same day.'],
+      source: 'community',
+      note: 'Rajasthan tourism & maps disagree slightly — verify boating counter hours.',
+    },
+  },
+  {
+    id: 'sariska-tiger-reserve',
+    name: 'Sariska Tiger Reserve',
+    teaser: 'Jeep safaris · dry deciduous forest',
+    paragraphs: [
+      'Sariska’s core and buffer spread west of Alwar — tiger, leopard, sambar, and peacock in rocky valleys and dhok forest. Jeep safaris are the main visitor format: book through official channels, choose dawn or dusk slots in cooler months, and dress in layers for cold morning drives in winter.',
+      'Wildlife is never guaranteed; silence and patience beat volume. Combine with Kankwari or Pandupol only if your package and timings allow — do not pressure drivers to break park rules.',
+    ],
+    imageSrc: SARISKA_NP,
+    imageAlt: 'Dry forest landscape in Sariska Tiger Reserve, Rajasthan',
+    latitude: 27.318,
+    longitude: 76.438,
+    bestTimeHighlight:
+      'October–March for pleasant drives; April–June use earliest slots only · avoid summer midday tracks.',
+    visitHours: {
+      summary:
+        'Safari entry windows are fixed per season — typically morning & afternoon slots by online / counter booking; park closed evenings.',
+      lines: ['Core zone closure days (e.g. Wednesday historically in some seasons) — check current Rajasthan Forest / RTDC notice.'],
+      source: 'official',
+      note: 'Always book through authorised portals or FRH counters — avoid “guaranteed tiger” touts.',
+    },
+  },
+]
 
 const ajmerPlaces: FamousPlace[] = [
   {
@@ -276,6 +377,8 @@ const ajmerPlaces: FamousPlace[] = [
 
 const bySlug: Record<string, FamousPlace[]> = {
   ajmer: ajmerPlaces,
+  alwar: alwarPlaces,
+  ...REST_FAMOUS_BY_SLUG,
 }
 
 /** Always first when present; rest of list is shuffled (Fisher–Yates). */

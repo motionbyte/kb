@@ -1,3 +1,6 @@
+import { getCityBySlug } from '@/data/cities'
+import type { City } from '@/types'
+
 export type MonumentTimelineStop = {
   period: string
   ruler: string
@@ -197,8 +200,204 @@ const AJMER_HISTORICAL: HistoricalPlacesGuideBundle = {
   ],
 }
 
-export function getHistoricalPlacesGuideByCitySlug(slug: string): HistoricalPlacesGuideBundle | null {
+function mq(q: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`
+}
+
+type HistCtx = Pick<City, 'name' | 'slug' | 'region'>
+
+const genericHistoricalCache = new Map<string, HistoricalPlacesGuideBundle>()
+
+function buildGenericHistoricalGuide(ctx: HistCtx): HistoricalPlacesGuideBundle {
+  const cached = genericHistoricalCache.get(ctx.slug)
+  if (cached) return cached
+
+  const cn = ctx.name
+  const rg = ctx.region
+  const slug = ctx.slug
+
+  const bundle: HistoricalPlacesGuideBundle = {
+    intro: {
+      eyebrow: 'Sightseeing & Attractions',
+      title: 'Historical places',
+      lead: `A district-level historical walkthrough for ${cn}: forts and ridge seats, courtly cores, water monuments, and civic layers that explain how ${rg} evolved politically and socially. Names below mix archetypal site types with live Map searches — verify opening hours, ASI tickets, and local rules before visiting.`,
+    },
+    categories: [
+      { label: 'Fortifications & seats', value: `Hill forts, garhs, and military ridges around ${cn}` },
+      { label: 'Court & urban cores', value: 'Palaces, havelis, and old civic administration belts' },
+      { label: 'Water heritage', value: 'Stepwells, tanks, and medieval hydrology that sustained towns' },
+      { label: 'Modern memory layers', value: 'Colonial civic buildings, memorials, and museum archives' },
+    ],
+    monuments: [
+      {
+        id: `${slug}-hist-fort`,
+        name: 'Fort, garh & ridge strongholds',
+        typeTag: 'Hill fort / defensive seat',
+        era: 'Early medieval to late Maratha–Rajput phases (site-specific)',
+        location: `Fort belt and Aravalli approaches, ${cn} district`,
+        mapUrl: mq(`${cn} fort heritage Rajasthan historical`),
+        summary: `Rajasthan’s towns often grew under the shadow of a fort or ridge post controlling trade, pilgrimage, or pasture routes. Around ${cn}, search for garh names, watchpoints, and walled enclosures that show how ${rg} balanced agriculture, warfare, and mobility.`,
+        detailedHistory: [
+          `In most districts of ${rg}, Rajput clans, Rathores, Kachwahas, and allied lineages rotated control of forts through alliances, jagirs, and imperial farmans — ${cn} typically sits inside one such strategic corridor.`,
+          'Stone walls and bastions were not decorative: they managed monsoon runoff, stored grain, and anchored revenue collection for surrounding villages.',
+          'Mughal farmans and later Maratha dak routes sometimes repurposed the same ridges for relay horses, tax checkpoints, and pilgrimage protection.',
+          'British gazetteers and post-Independence conservation frames added “protected monument” status to some sites — use ASI / state archaeology pages for ticketed access.',
+        ],
+        rulersTimeline: [
+          {
+            period: 'c. 8th–13th century',
+            ruler: 'Early Rajput polities & Chauhan-era parallels',
+            note: `Hill seats consolidate around trade–pasture nodes; ${cn} inherits that geography.`,
+          },
+          {
+            period: 'c. 14th–17th century',
+            ruler: 'Regional kingdoms & Mughal suzerainty',
+            note: 'Forts become nodes of negotiated sovereignty — tribute, mansabdari postings, pilgrimage security.',
+          },
+          {
+            period: '18th–19th century',
+            ruler: 'Maratha influence & treaty networks',
+            note: 'Some forts gain new artillery platforms; others decay into symbolic seats.',
+          },
+          {
+            period: '20th century onward',
+            ruler: 'Heritage & civic stewardship',
+            note: 'Tourism, lighting, and conservation change how locals relate to the same stone.',
+          },
+        ],
+        braveStories: [
+          `Local memory often celebrates night vigil on the walls, not only single battles — endurance on scarce water mattered as much as sword clashes in ${rg}.`,
+          'Women’s roles in provisioning, intelligence, and ritual during sieges appear in oral histories even when colonial texts underplay them.',
+        ],
+      },
+      {
+        id: `${slug}-hist-palace`,
+        name: 'Palace, haveli & court heritage core',
+        typeTag: 'Royal / elite residence layer',
+        era: '17th–20th century layers (city-specific)',
+        location: `Old city and administrative spine, ${cn}`,
+        mapUrl: mq(`${cn} palace haveli heritage old city`),
+        summary: `Courtly architecture around ${cn} mixes Rajput jharokha grammar with Mughal arcades and later colonial offices. These buildings narrate marriage alliances, durbars, and the shift from sword prestige to paperwork and railways.`,
+        detailedHistory: [
+          'Courtyards (chowks) organized gendered movement, treasury access, and festival display — many havelis doubled as banking houses for caravan trade.',
+          'Stucco, mirror glass, and blue pottery imports trace Jaipur–Jodhpur craft circuits into smaller district towns.',
+          'Partition and land-reform cycles converted some elite homes into schools, courts, or hotels — layers of reuse are visible in mixed facades.',
+          `For ${cn}, compare “living palace” museums with still-private havelis — permission and photography rules differ sharply.`,
+        ],
+        rulersTimeline: [
+          {
+            period: '17th–18th century',
+            ruler: 'Regional riyasat courts',
+            note: 'Durbars, patronage to poets, temple grants.',
+          },
+          {
+            period: '19th century',
+            ruler: 'Treaty & residency pressures',
+            note: 'Administrative buildings multiply; some palaces get neo-classical wings.',
+          },
+          {
+            period: '20th–21st century',
+            ruler: 'Tourism & adaptive reuse',
+            note: 'Heritage hotels, sound-and-light, civic museums.',
+          },
+        ],
+        braveStories: [
+          'Patronage stories link havelis to famine kitchens, not only feasts — check local guides for 1899 or 1943 relief narratives where documented.',
+          'Craft families still tie their identity to specific courtyards; ask before photographing people at work.',
+        ],
+      },
+      {
+        id: `${slug}-hist-water`,
+        name: 'Stepwells, tanks & medieval hydrology',
+        typeTag: 'Baori / johad / lake works',
+        era: '11th–19th century (mixed)',
+        location: `Urban periphery and old wards, ${cn}`,
+        mapUrl: mq(`${cn} stepwell baori heritage tank`),
+        summary: `Water monuments are ${cn}’s silent constitution: they structured festivals, caste cooperation around cleaning shifts, and the rhythm of women’s journeys. Many are ASI or state-protected — steep steps demand footwear with grip.`,
+        detailedHistory: [
+          'Stepwells (baori/vav) combined spiritual merit, public health, and microclimate cooling — carved levels also served as social stages during holy weeks.',
+          'Johads and anicuts in the district belt show community labour investment before piped water; some tanks still recharge wells for peri-urban fields.',
+          'Mughal and later British engineers mapped many sites in irrigation reports — useful for understanding which bodies are natural lakes vs reshaped tanks.',
+          'Monsoon algal bloom and bird migrations can make some tanks ecologically sensitive — follow board warnings.',
+        ],
+        rulersTimeline: [
+          {
+            period: 'Medieval patronage',
+            ruler: 'Queens & noble donors',
+            note: 'Many inscriptions credit royal women — read translation plaques carefully.',
+          },
+          {
+            period: 'Colonial hydrology',
+            ruler: 'Public Works Department era',
+            note: 'Canals, bunds, and famine codes refashion water rights.',
+          },
+          {
+            period: 'Present',
+            ruler: 'Municipal + heritage boards',
+            note: 'Fencing, lighting, and idol immersion rules evolve yearly.',
+          },
+        ],
+        braveStories: [
+          'Flood-season rescues and rival mohalla teams maintaining the same well appear in oral histories — “bravery” includes collective upkeep.',
+          `Desert-adjacent districts celebrate water as sovereignty; ${cn} participates in that moral geography even when headlines focus only on forts.`,
+        ],
+      },
+      {
+        id: `${slug}-hist-civic`,
+        name: 'Colonial civic layer & memorial archives',
+        typeTag: 'Gothic / Indo-Saracenic / modernist civic',
+        era: '1860s–1950s (typical)',
+        location: `Station road, courts, colleges — ${cn}`,
+        mapUrl: mq(`${cn} heritage building museum colonial`),
+        summary: `Railways, law courts, and schools reframed ${cn} as a paperwork city inside ${rg}. Clock towers, post offices, and memorial statues are not “less historical” than forts — they explain voting, policing, and public health as you see them today.`,
+        detailedHistory: [
+          'Sandy tracks became metre-gauge lifelines for salt, cloth, and pilgrims — station neighbourhoods often have the most mixed castes and cuisines.',
+          'War memorials and statues encode which conflicts the colonial state wanted remembered; Independence-era renaming adds another palimpsest.',
+          'Universities and hospitals imported architectural styles that locals then copied in smaller shops — a visual network across Rajasthan.',
+          `Municipal museums and district archives sometimes hold maps not yet digitized — researchers should call ahead.`,
+        ],
+        rulersTimeline: [
+          {
+            period: 'British Raj district era',
+            ruler: 'Collector-led administration',
+            note: 'Gazetteers freeze a snapshot of villages and roads — compare with old survey maps.',
+          },
+          {
+            period: '1947–1970s',
+            ruler: 'Nation-building institutions',
+            note: 'New colleges, cooperatives, and dams change daily life faster than fort restorations.',
+          },
+          {
+            period: '1990s onward',
+            ruler: 'Heritage listing & litigation',
+            note: 'Some civic buildings gain INTACH / HUDA tags; others decay.',
+          },
+        ],
+        braveStories: [
+          `Lawyers, teachers, and nurses trained in these buildings shaped ${cn}’s modern moral voice — civic bravery is quieter than battlefield myth but equally formative.`,
+          'Partition refugee resettlement and later riot relief routes often used the same station squares — read plaques with empathy.',
+        ],
+      },
+    ],
+  }
+
+  genericHistoricalCache.set(slug, bundle)
+  return bundle
+}
+
+export function getHistoricalPlacesGuideByCitySlug(slug: string): HistoricalPlacesGuideBundle {
   if (slug === 'ajmer') return AJMER_HISTORICAL
-  return null
+  const city = getCityBySlug(slug)
+  const ctx: HistCtx = city
+    ? { name: city.name, slug: city.slug, region: city.region }
+    : {
+        name: slug
+          .split('-')
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' '),
+        slug,
+        region: 'Rajasthan',
+      }
+  return buildGenericHistoricalGuide(ctx)
 }
 

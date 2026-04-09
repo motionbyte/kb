@@ -1,6 +1,9 @@
+import { useMemo } from 'react'
+import { CityHistoryAccordion } from '@/components/features/CityHistoryAccordion'
 import { GuideCityCategoryMenu } from '@/components/features/GuideCityCategoryMenu'
 import { GuideCityDropdown } from '@/components/features/GuideCityDropdown'
 import { cities, getCityBySlug } from '@/data/cities'
+import { getCityHistoryBySlug } from '@/data/cityHistory'
 import './GuideHubMenu.css'
 
 type Step = 'cities' | 'categories'
@@ -20,6 +23,10 @@ export function GuideHubMenu({
   onNavigate,
 }: GuideHubMenuProps) {
   const city = selectedCitySlug ? getCityBySlug(selectedCitySlug) : undefined
+  const historyBundle = useMemo(
+    () => (selectedCitySlug ? getCityHistoryBySlug(selectedCitySlug) : undefined),
+    [selectedCitySlug],
+  )
 
   return (
     <div className="guide-hub">
@@ -39,6 +46,11 @@ export function GuideHubMenu({
             <h1 className="guide-hub__title guide-hub__title--city" id="guide-hub-title">
               {city ? city.name : 'City'}
             </h1>
+            {historyBundle ? (
+              <div className="guide-hub__history">
+                <CityHistoryAccordion bundle={historyBundle} />
+              </div>
+            ) : null}
             <p className="guide-hub__lead">
               Choose a topic — each link opens in the guide for {city?.name ?? 'this city'}.
             </p>

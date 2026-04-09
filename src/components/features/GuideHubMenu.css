@@ -37,6 +37,13 @@
   font-size: clamp(2.5rem, 7vw, 3.2rem);
 }
 
+/* City history ("What is [City]?") between title and "Choose a topic" */
+.guide-hub__history {
+  width: 100%;
+  margin: var(--space-4) 0 var(--space-5);
+  text-align: left;
+}
+
 .guide-hub__lead {
   margin: 0 auto;
   max-width: 42ch;

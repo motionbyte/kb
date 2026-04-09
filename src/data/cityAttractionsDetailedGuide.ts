@@ -1,3 +1,7 @@
+import { getCityBySlug } from '@/data/cities'
+import type { City } from '@/types'
+import { buildGenericCityAttractionsGuide } from '@/data/cityAttractionsGenericBundles'
+
 export type AttractionKind = 'natural' | 'religious' | 'museums' | 'hidden-gems'
 
 export type AttractionDetail = {
@@ -278,8 +282,21 @@ const AJMER_ATTRACTION_GUIDE: CityGuide = {
   },
 }
 
+type AttrCtx = Pick<City, 'name' | 'slug' | 'region'>
+
 export function getCityAttractionsDetailedGuide(slug: string, kind: AttractionKind): AttractionGuideBundle {
   if (slug === 'ajmer') return AJMER_ATTRACTION_GUIDE[kind]
-  return AJMER_ATTRACTION_GUIDE[kind]
+  const city = getCityBySlug(slug)
+  const ctx: AttrCtx = city
+    ? { name: city.name, slug: city.slug, region: city.region }
+    : {
+        name: slug
+          .split('-')
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' '),
+        slug,
+        region: 'Rajasthan',
+      }
+  return buildGenericCityAttractionsGuide(ctx)[kind]
 }
 

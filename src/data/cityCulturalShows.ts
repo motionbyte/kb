@@ -1,3 +1,7 @@
+import type { City } from '@/types'
+import { getCityBySlug } from '@/data/cities'
+import { getCityLandmarkCentre } from '@/data/cityPhotographyLandmarkRows'
+
 export type CulturalAuthorityContact = {
   id: string
   label: string
@@ -36,6 +40,152 @@ export type CityCulturalShowsBundle = {
   leadParagraphs: string[]
   authorityContacts: CulturalAuthorityContact[]
   categories: CulturalShowsCategory[]
+}
+
+const rajTourismCultural: CulturalAuthorityContact = {
+  id: 'tourism-raj',
+  label: 'Rajasthan Tourism',
+  role: 'Official festival pointers, licensed hosts & event desks',
+  phoneDisplay: '1800-180-29',
+  telDigits: '1800180029',
+  website: 'https://tourism.rajasthan.gov.in/',
+}
+
+function genericCulturalShows(city: City): CityCulturalShowsBundle {
+  const { name: cityName, slug, region } = city
+  const pin = getCityLandmarkCentre(slug)
+  const shift = (dLat: number, dLng: number) => ({
+    latitude: pin.latitude + dLat,
+    longitude: pin.longitude + dLng,
+  })
+
+  return {
+    citySlug: slug,
+    leadTitle: `Cultural shows in ${cityName}`,
+    leadParagraphs: [
+      `${region} shapes how folk troupes, fair stages, and temple music show up around ${cityName} — lake towns, desert belts, and tribal haats do not share one fixed “nightly theatre” calendar.`,
+      'Many performances cluster around melas, harvest weeks, and festival dates rather than ticketed daily slots — confirm timings with your stay, district notices, and tourism desks.',
+    ],
+    authorityContacts: [
+      rajTourismCultural,
+      {
+        id: `${slug}-district`,
+        label: `${cityName} district administration`,
+        role: 'Mela permissions, civic auditoriums & public programme notices',
+        website: 'https://rajasthan.gov.in/',
+      },
+      {
+        id: 'emergency-crowd',
+        label: 'Emergency',
+        role: 'Police / ambulance — crowded fair nights',
+        phoneDisplay: '112',
+        telDigits: '112',
+      },
+    ],
+    categories: [
+      {
+        id: 'cultural-historic',
+        eyebrow: 'Best known · fairs & rooted formats',
+        title: 'Festival stages & traditional performance',
+        intro: [
+          `District-level programmes and long-running fair circuits bring ghoomar, kalbelia, bhavai, and devotional music into public view — usually seasonal, often outdoors.`,
+        ],
+        shows: [
+          {
+            id: `${slug}-folk-fair`,
+            name: `Folk & dance stages on mela / republic-day style circuits`,
+            teaser: 'Community forms → public stage',
+            where: `Collectorate or nagar palika grounds, district fair venues, and major festival hubs in ${cityName} district`,
+            historicalContext: [
+              'Rajasthan’s folk repertoire is often staged at melas and state-sponsored cultural weeks — line-ups follow academic calendars, national holidays, and harvest seasons as much as tourism demand.',
+              'Sound systems and crowd barriers are uneven — arrive expecting a mela atmosphere, not a silent theatre.',
+            ],
+            whatToExpect: [
+              'Evening slots more common than afternoon; weekends busier.',
+              'Weather exposure — carry water in summer, layer in winter.',
+              'Photo etiquette: ask performers when in doubt; crowds can block sightlines.',
+            ],
+            typicalTiming: 'Strongest Oct–Mar; dense around local fairs — verify in district press or tourism desk.',
+            contact: {
+              id: 'tourism-raj-folk',
+              label: 'Rajasthan Tourism',
+              role: 'Fair-season pointers',
+              phoneDisplay: '1800-180-29',
+              telDigits: '1800180029',
+            },
+            ...shift(0, 0),
+          },
+          {
+            id: `${slug}-temple-devotional`,
+            name: `Temple-town bhajan, kirtan & shrine evenings`,
+            teaser: 'Devotional listening settings',
+            where: `Major temples, maths, and tank-side precincts in ${cityName} — dress modestly; follow shrine rules`,
+            historicalContext: [
+              'Bhajan and kirtan formats belong to pilgrimage and festival rhythms — they are listening gatherings first, not always amplified “shows”.',
+              'Recording and participation rules vary by trust and occasion.',
+            ],
+            whatToExpect: [
+              'Quieter than fair stages; shorter programmes possible.',
+              'Footwear and cover rules at entries; avoid flash near sanctums.',
+            ],
+            typicalTiming: 'Often around aarti windows and festival dates — timing varies by temple.',
+            ...shift(0.022, -0.018),
+          },
+        ],
+      },
+      {
+        id: 'cultural-tourist-local',
+        eyebrow: 'Visitor-friendly · venue nights',
+        title: 'Hotels, cafés & auditorium programmes',
+        intro: [
+          'Curated sets for travellers — heritage hotels, cultural centres, and college auditoriums sometimes run compact programmes when occupancy and exam calendars allow.',
+        ],
+        shows: [
+          {
+            id: `${slug}-hotel-courtyard`,
+            name: `Heritage hotel & resort courtyard evenings`,
+            teaser: 'Dinner-plus-show packages',
+            where: `Larger hotels and resorts serving ${cityName} — book as guest or with prior table reservation`,
+            historicalContext: [
+              'Hospitality venues assemble folk ensembles and instrumental sets in digest formats for visitors — content is staged for dining rooms rather than shrine acoustics.',
+            ],
+            whatToExpect: [
+              '45–90 minute sets; vegetarian menus common.',
+              'Ask before filming performers up close.',
+            ],
+            typicalTiming: 'Peak visitor months (Oct–Mar) and long weekends — call ahead.',
+            contact: rajTourismCultural,
+            ...shift(-0.015, 0.02),
+          },
+          {
+            id: `${slug}-auditorium`,
+            name: `College & civic auditorium one-offs`,
+            teaser: 'Music, theatre, poetry',
+            where: `Town halls, university campuses, and district auditoriums in ${cityName}`,
+            historicalContext: [
+              'Modern city culture layers — student fests and invited troupes — sit alongside folk forms; schedules are irregular.',
+            ],
+            whatToExpect: [
+              'Ticketed or invite-only; language mix Hindi / Rajasthani / English depending on organizer.',
+              'Postponements happen — check same day when possible.',
+            ],
+            typicalTiming: 'Academic-year bursts and national festival weeks.',
+            ...shift(0.018, 0.014),
+          },
+        ],
+      },
+      {
+        id: 'cultural-live-today',
+        eyebrow: 'Today · live listings',
+        title: 'Cultural shows today',
+        intro: [
+          'This section fetches fresh listings when you open it. Connect your events API to Insider/BookMyShow-style aggregators using VITE_LOCAL_EVENTS_URL for production.',
+        ],
+        shows: [],
+        liveEvents: true,
+      },
+    ],
+  }
 }
 
 const ajmerCulturalShows: CityCulturalShowsBundle = {
@@ -226,5 +376,9 @@ const bySlug: Record<string, CityCulturalShowsBundle> = {
 }
 
 export function getCityCulturalShowsBySlug(slug: string): CityCulturalShowsBundle | undefined {
-  return bySlug[slug]
+  const curated = bySlug[slug]
+  if (curated) return curated
+  const city = getCityBySlug(slug)
+  if (!city) return undefined
+  return genericCulturalShows(city)
 }

@@ -1,3 +1,5 @@
+import { getCityBySlug } from '@/data/cities'
+
 export type CarrierId = 'jio' | 'airtel' | 'vi'
 
 export type InternetGuideBundle = {
@@ -160,9 +162,22 @@ const AJMER_INTERNET: InternetGuideBundle = {
   },
 }
 
+function internetGuideForNonAjmer(cityName: string): InternetGuideBundle {
+  const b = structuredClone(AJMER_INTERNET)
+  b.bestNetworks.verdict =
+    `In ${cityName}, **Jio and Airtel** are the safest “first pick” for most tourists. If you want maximum reliability, test both at your hotel (signal indoors matters).`
+  b.bestNetworks.cityNotes = [
+    `Old-town lanes and market cores can be patchy indoors — your hotel room signal matters more than a quick street test.`,
+    `Day trips and highway legs can vary — keep offline maps downloaded.`,
+    `If you buy only one SIM, pick the carrier that works best inside your stay (room + lobby).`,
+  ]
+  return b
+}
+
 export function getInternetGuideByCitySlug(slug: string): InternetGuideBundle {
   if (slug === 'ajmer') return AJMER_INTERNET
-  // Default: use Ajmer bundle as a safe baseline copy for now.
-  return AJMER_INTERNET
+  const city = getCityBySlug(slug)
+  if (!city) return AJMER_INTERNET
+  return internetGuideForNonAjmer(city.name)
 }
 

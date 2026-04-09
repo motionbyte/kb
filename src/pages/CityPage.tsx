@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { CityFamousPlacesAccordion } from '@/components/features/CityFamousPlacesAccordion'
-import { CityHistoryAccordion } from '@/components/features/CityHistoryAccordion'
 import { CityScamAlertsAccordion } from '@/components/features/CityScamAlertsAccordion'
 import { CitySafetySection } from '@/components/features/CitySafetySection'
 import { CityEtiquetteGuide } from '@/components/features/CityEtiquetteGuide'
@@ -21,7 +20,6 @@ import { CityHistoricalPlacesGuide } from '@/components/features/CityHistoricalP
 import { CityAttractionsDetailedGuide } from '@/components/features/CityAttractionsDetailedGuide'
 import { CityTransportGuide } from '@/components/features/CityTransportGuide'
 import { CityShoppingGuide } from '@/components/features/CityShoppingGuide'
-import { getCityHistoryBySlug } from '@/data/cityHistory'
 import { getCityBySlug } from '@/data/cities'
 import { getFamousPlacesByCitySlug } from '@/data/cityFamousPlaces'
 import '@/pages/WeatherPage.css'
@@ -74,8 +72,6 @@ export function CityPage() {
     return getFamousPlacesByCitySlug(slug)
   }, [slug])
 
-  const historyBundle = useMemo(() => (slug ? getCityHistoryBySlug(slug) : undefined), [slug])
-
   if (!city) {
     return (
       <div className="city-page city-page--app">
@@ -90,6 +86,18 @@ export function CityPage() {
     )
   }
 
+  if (scamsFocus) {
+    return (
+      <div className="city-page city-page--app city-page--scams-focus">
+        <header className="weather-page__intro city-page__intro">
+          <p className="city-page__region">{city.region}</p>
+          <h1 className="weather-page__city">{city.name}</h1>
+        </header>
+        <CityScamAlertsAccordion cityName={city.name} />
+      </div>
+    )
+  }
+
   if (safetyTipsFocus) {
     return (
       <div className="city-page city-page--app city-page--safety-tips-focus">
@@ -97,7 +105,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityTravelSafetyTips cityName={city.name} />
+        <CityTravelSafetyTips key={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -109,7 +117,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityEtiquetteGuide cityName={city.name} />
+        <CityEtiquetteGuide key={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -119,9 +127,9 @@ export function CityPage() {
       <div className="city-page city-page--app city-page--language-help-focus">
         <header className="weather-page__intro city-page__intro">
           <p className="city-page__region">{city.region}</p>
-          <p className="weather-page__city">{city.name}</p>
+          <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityLanguageHelpChat cityName={city.name} />
+        <CityLanguageHelpChat key={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -133,7 +141,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CitySimCardsGuide citySlug={city.slug} cityName={city.name} />
+        <CitySimCardsGuide key={city.slug} citySlug={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -145,7 +153,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityInternetGuide citySlug={city.slug} cityName={city.name} />
+        <CityInternetGuide key={city.slug} citySlug={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -157,7 +165,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityCurrencyExchangeGuide citySlug={city.slug} cityName={city.name} />
+        <CityCurrencyExchangeGuide key={city.slug} citySlug={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -169,7 +177,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityEmergencyContactsGuide citySlug={city.slug} cityName={city.name} />
+        <CityEmergencyContactsGuide key={city.slug} citySlug={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -181,7 +189,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityHospitalsGuide citySlug={city.slug} cityName={city.name} />
+        <CityHospitalsGuide key={city.slug} citySlug={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -193,7 +201,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityHotelsGuide citySlug={city.slug} cityName={city.name} />
+        <CityHotelsGuide key={city.slug} citySlug={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -205,7 +213,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityAccommodationCategoryGuide citySlug={city.slug} cityName={city.name} category="hostels" />
+        <CityAccommodationCategoryGuide key={city.slug} citySlug={city.slug} cityName={city.name} category="hostels" />
       </div>
     )
   }
@@ -217,7 +225,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityAccommodationCategoryGuide citySlug={city.slug} cityName={city.name} category="homestays" />
+        <CityAccommodationCategoryGuide key={city.slug} citySlug={city.slug} cityName={city.name} category="homestays" />
       </div>
     )
   }
@@ -229,7 +237,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityAccommodationCategoryGuide citySlug={city.slug} cityName={city.name} category="resorts" />
+        <CityAccommodationCategoryGuide key={city.slug} citySlug={city.slug} cityName={city.name} category="resorts" />
       </div>
     )
   }
@@ -241,7 +249,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityAccommodationCategoryGuide citySlug={city.slug} cityName={city.name} category="heritage" />
+        <CityAccommodationCategoryGuide key={city.slug} citySlug={city.slug} cityName={city.name} category="heritage" />
       </div>
     )
   }
@@ -253,7 +261,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityAccommodationCategoryGuide citySlug={city.slug} cityName={city.name} category="camps" />
+        <CityAccommodationCategoryGuide key={city.slug} citySlug={city.slug} cityName={city.name} category="camps" />
       </div>
     )
   }
@@ -265,7 +273,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityRestaurantsGuide citySlug={city.slug} cityName={city.name} />
+        <CityRestaurantsGuide key={city.slug} citySlug={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -277,7 +285,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityFoodCategoryGuide citySlug={city.slug} cityName={city.name} kind="street-food" />
+        <CityFoodCategoryGuide key={`${city.slug}-street-food`} citySlug={city.slug} cityName={city.name} kind="street-food" />
       </div>
     )
   }
@@ -289,7 +297,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityFoodCategoryGuide citySlug={city.slug} cityName={city.name} kind="cafes" />
+        <CityFoodCategoryGuide key={`${city.slug}-cafes`} citySlug={city.slug} cityName={city.name} kind="cafes" />
       </div>
     )
   }
@@ -301,7 +309,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityFoodCategoryGuide citySlug={city.slug} cityName={city.name} kind="fine-dining" />
+        <CityFoodCategoryGuide key={`${city.slug}-fine-dining`} citySlug={city.slug} cityName={city.name} kind="fine-dining" />
       </div>
     )
   }
@@ -313,7 +321,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityFoodCategoryGuide citySlug={city.slug} cityName={city.name} kind="local-cuisine" />
+        <CityFoodCategoryGuide key={`${city.slug}-local-cuisine`} citySlug={city.slug} cityName={city.name} kind="local-cuisine" />
       </div>
     )
   }
@@ -325,7 +333,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityHistoricalPlacesGuide citySlug={city.slug} cityName={city.name} />
+        <CityHistoricalPlacesGuide key={city.slug} citySlug={city.slug} cityName={city.name} />
       </div>
     )
   }
@@ -337,7 +345,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityAttractionsDetailedGuide citySlug={city.slug} cityName={city.name} kind="natural" />
+        <CityAttractionsDetailedGuide key={`${city.slug}-natural`} citySlug={city.slug} cityName={city.name} kind="natural" />
       </div>
     )
   }
@@ -349,7 +357,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityAttractionsDetailedGuide citySlug={city.slug} cityName={city.name} kind="religious" />
+        <CityAttractionsDetailedGuide key={`${city.slug}-religious`} citySlug={city.slug} cityName={city.name} kind="religious" />
       </div>
     )
   }
@@ -361,7 +369,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityAttractionsDetailedGuide citySlug={city.slug} cityName={city.name} kind="museums" />
+        <CityAttractionsDetailedGuide key={`${city.slug}-museums`} citySlug={city.slug} cityName={city.name} kind="museums" />
       </div>
     )
   }
@@ -373,7 +381,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityAttractionsDetailedGuide citySlug={city.slug} cityName={city.name} kind="hidden-gems" />
+        <CityAttractionsDetailedGuide key={`${city.slug}-hidden-gems`} citySlug={city.slug} cityName={city.name} kind="hidden-gems" />
       </div>
     )
   }
@@ -385,7 +393,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityTransportGuide citySlug={city.slug} cityName={city.name} kind="local-transport" />
+        <CityTransportGuide key={`${city.slug}-local-transport`} citySlug={city.slug} cityName={city.name} kind="local-transport" />
       </div>
     )
   }
@@ -397,7 +405,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityTransportGuide citySlug={city.slug} cityName={city.name} kind="cab-apps" />
+        <CityTransportGuide key={`${city.slug}-cab-apps`} citySlug={city.slug} cityName={city.name} kind="cab-apps" />
       </div>
     )
   }
@@ -409,7 +417,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityTransportGuide citySlug={city.slug} cityName={city.name} kind="rental" />
+        <CityTransportGuide key={`${city.slug}-rental`} citySlug={city.slug} cityName={city.name} kind="rental" />
       </div>
     )
   }
@@ -421,7 +429,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityTransportGuide citySlug={city.slug} cityName={city.name} kind="public-transport" />
+        <CityTransportGuide key={`${city.slug}-public-transport`} citySlug={city.slug} cityName={city.name} kind="public-transport" />
       </div>
     )
   }
@@ -433,7 +441,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityTransportGuide citySlug={city.slug} cityName={city.name} kind="airport-transfers" />
+        <CityTransportGuide key={`${city.slug}-airport-transfers`} citySlug={city.slug} cityName={city.name} kind="airport-transfers" />
       </div>
     )
   }
@@ -445,7 +453,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityTransportGuide citySlug={city.slug} cityName={city.name} kind="safari" />
+        <CityTransportGuide key={`${city.slug}-safari`} citySlug={city.slug} cityName={city.name} kind="safari" />
       </div>
     )
   }
@@ -457,7 +465,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityShoppingGuide citySlug={city.slug} cityName={city.name} kind="local-markets" />
+        <CityShoppingGuide key={`${city.slug}-local-markets`} citySlug={city.slug} cityName={city.name} kind="local-markets" />
       </div>
     )
   }
@@ -469,7 +477,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityShoppingGuide citySlug={city.slug} cityName={city.name} kind="handicrafts" />
+        <CityShoppingGuide key={`${city.slug}-handicrafts`} citySlug={city.slug} cityName={city.name} kind="handicrafts" />
       </div>
     )
   }
@@ -481,7 +489,7 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityShoppingGuide citySlug={city.slug} cityName={city.name} kind="souvenirs" />
+        <CityShoppingGuide key={`${city.slug}-souvenirs`} citySlug={city.slug} cityName={city.name} kind="souvenirs" />
       </div>
     )
   }
@@ -493,19 +501,17 @@ export function CityPage() {
           <p className="city-page__region">{city.region}</p>
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
-        <CityShoppingGuide citySlug={city.slug} cityName={city.name} kind="shopping-streets" />
+        <CityShoppingGuide key={`${city.slug}-shopping-streets`} citySlug={city.slug} cityName={city.name} kind="shopping-streets" />
       </div>
     )
   }
 
   return (
-    <div className={scamsFocus ? 'city-page city-page--app city-page--scams-focus' : 'city-page city-page--app'}>
+    <div className="city-page city-page--app">
       <header className="weather-page__intro city-page__intro">
         <p className="city-page__region">{city.region}</p>
         <h1 className="weather-page__city">{city.name}</h1>
-        {!scamsFocus && historyBundle ? (
-          <CityHistoryAccordion bundle={historyBundle} />
-        ) : !scamsFocus ? (
+        {!scamsFocus ? (
           <>
             <p className="city-page__tagline">{city.tagline}</p>
             <p className="weather-page__sub city-page__desc">{city.description}</p>
@@ -543,7 +549,7 @@ export function CityPage() {
 
       <CitySafetySection citySlug={city.slug} cityName={city.name} />
 
-      <CityScamAlertsAccordion />
+      <CityScamAlertsAccordion cityName={city.name} />
 
       <section id="city-tips" className="city-page__block city-page__block--last">
         <p className="city-page__eyebrow">Local wisdom</p>

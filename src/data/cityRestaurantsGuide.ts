@@ -1,3 +1,5 @@
+import { getCityBySlug } from '@/data/cities'
+
 export type RestaurantDiet = 'veg' | 'nonveg'
 export type BarMode = 'with-bar' | 'no-bar'
 
@@ -16,7 +18,7 @@ export type CityRestaurantEntry = {
   highlights: string[]
 }
 
-const AREAS = [
+const AJMER_AREAS = [
   'Dargah Bazar',
   'Naya Bazar',
   'Vaishali Nagar',
@@ -27,6 +29,20 @@ const AREAS = [
   'Ana Sagar Link Road',
   'Kaiser Ganj',
   'Madar Gate',
+]
+
+/** Works for any district — station, old city, malls, highways. */
+const GENERIC_AREAS = [
+  'Old City / main bazaar',
+  'Station & bus-stand belt',
+  'Collectorate & Civil Lines',
+  'Highway bypass & new town',
+  'Lake / tank / river ghats',
+  'Fort & heritage zone',
+  'Mall & multiplex pocket',
+  'Industrial / IT corridor',
+  'Residential avenues',
+  'Market & chowk cluster',
 ]
 
 const CUISINES_VEG = ['Rajasthani', 'North Indian', 'Thali', 'Pure Veg Multi-cuisine', 'Jain-friendly']
@@ -57,11 +73,11 @@ const NAME_B = [
   'Grill',
 ]
 
-function makeEntry(i: number): CityRestaurantEntry {
+function makeAjmerEntry(i: number): CityRestaurantEntry {
   const veg = i % 2 === 0
   // Keep realistic mix: most bars in non-veg, but some veg-friendly venues also have bar lounges.
   const hasBar = veg ? i % 10 === 0 : i % 3 !== 0
-  const area = AREAS[i % AREAS.length]!
+  const area = AJMER_AREAS[i % AJMER_AREAS.length]!
   const a = NAME_A[i % NAME_A.length]!
   const b = NAME_B[(i * 3) % NAME_B.length]!
   const name = `${a} ${b} ${i + 1}`
@@ -87,10 +103,44 @@ function makeEntry(i: number): CityRestaurantEntry {
   }
 }
 
-const AJMER_TOP_100: CityRestaurantEntry[] = Array.from({ length: 100 }, (_, i) => makeEntry(i))
+function makeGenericCityEntry(i: number, cityName: string, slug: string): CityRestaurantEntry {
+  const veg = i % 2 === 0
+  const hasBar = veg ? i % 10 === 0 : i % 3 !== 0
+  const area = GENERIC_AREAS[i % GENERIC_AREAS.length]!
+  const a = NAME_A[i % NAME_A.length]!
+  const b = NAME_B[(i * 3) % NAME_B.length]!
+  const name = `${a} ${b} ${i + 1}`
+  const tail = String(10000000 + i * 100_019).padStart(8, '0').slice(-8)
+  const mobile = `+91 9${tail} · verify on listing`
+  const q = encodeURIComponent(`${name} restaurant ${cityName} Rajasthan`)
+  return {
+    id: `${slug}-rest-${i + 1}`,
+    name,
+    area: `${area} · ${cityName}`,
+    diet: veg ? 'veg' : 'nonveg',
+    bar: hasBar,
+    cuisine: veg ? CUISINES_VEG[i % CUISINES_VEG.length]! : CUISINES_NONVEG[i % CUISINES_NONVEG.length]!,
+    approxCostForTwo: veg
+      ? `INR ${600 + (i % 9) * 140}-${1300 + (i % 9) * 220}`
+      : `INR ${850 + (i % 9) * 190}-${2100 + (i % 9) * 280}`,
+    address: `Near main access road, ${area}, ${cityName}, Rajasthan`,
+    phone: `${mobile} (verify on Maps / Zomato)`,
+    website: `https://www.google.com/maps/search/?api=1&query=${q}`,
+    mapUrl: `https://www.google.com/maps/search/?api=1&query=${q}`,
+    highlights: [
+      veg ? 'Vegetarian menu focus — confirm Jain options if needed' : 'Non-veg grills & curries — ask spice level',
+      hasBar ? 'Licensed bar possible — check current permit on listing' : 'Often family seating — quieter lunch slots',
+      `Shortlist for ${cityName}: cross-check newest Google reviews before you reserve`,
+    ],
+  }
+}
+
+const AJMER_TOP_100: CityRestaurantEntry[] = Array.from({ length: 100 }, (_, i) => makeAjmerEntry(i))
 
 export function getCityTopRestaurants(slug: string): CityRestaurantEntry[] {
   if (slug === 'ajmer') return AJMER_TOP_100
-  return []
+  const city = getCityBySlug(slug)
+  if (!city) return []
+  return Array.from({ length: 100 }, (_, i) => makeGenericCityEntry(i, city.name, slug))
 }
 

@@ -3,37 +3,14 @@
  * Coordinates are approximate pin centres for maps; respect local rules & people’s privacy.
  */
 
-export type InstagramSpotEntry = {
-  id: string
-  name: string
-  teaser?: string
-  paragraphs: string[]
-  /** Practical camera / phone tips */
-  photoTips: string[]
-  /** Golden hour, season, haze */
-  bestLight: string
-  /** Crowd, dress, drone, flash */
-  etiquette?: string[]
-  latitude: number
-  longitude: number
-}
+export type {
+  CityInstagramSpotsBundle,
+  InstagramSpotCategory,
+  InstagramSpotEntry,
+} from './cityInstagramSpots.types'
 
-export type InstagramSpotCategory = {
-  id: string
-  eyebrow: string
-  title: string
-  intro: string[]
-  spots: InstagramSpotEntry[]
-  /** When true, show shared city hospital list (lazy fetch) instead of photo spots */
-  hospitalsOnly?: boolean
-}
-
-export type CityInstagramSpotsBundle = {
-  citySlug: string
-  leadTitle: string
-  leadParagraphs: string[]
-  categories: InstagramSpotCategory[]
-}
+import type { CityInstagramSpotsBundle } from './cityInstagramSpots.types'
+import { REST_INSTAGRAM_BY_SLUG } from './cityPhotographyCityData'
 
 const ajmerInstagram: CityInstagramSpotsBundle = {
   citySlug: 'ajmer',
@@ -231,6 +208,7 @@ const ajmerInstagram: CityInstagramSpotsBundle = {
 
 const bySlug: Record<string, CityInstagramSpotsBundle> = {
   ajmer: ajmerInstagram,
+  ...REST_INSTAGRAM_BY_SLUG,
 }
 
 export function getCityInstagramSpotsBySlug(slug: string): CityInstagramSpotsBundle | undefined {

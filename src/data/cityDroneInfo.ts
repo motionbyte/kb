@@ -287,8 +287,574 @@ function genericBundle(cityName: string, slug: string): CityDroneBundle {
   }
 }
 
+/** Same structure as Ajmer: India-wide rules + city-specific lead & local context. */
+function districtDroneBundle(
+  slug: string,
+  cityName: string,
+  leadParagraphs: [string, string],
+  canFlyParagraphs: string[],
+  localContextParagraphs: string[],
+): CityDroneBundle {
+  return {
+    citySlug: slug,
+    cityLabel: cityName,
+    pageTitle: ajmerBundle.pageTitle,
+    leadParagraphs,
+    canFlyAnswer: {
+      heading: `Can you fly a drone in ${cityName}?`,
+      paragraphs: canFlyParagraphs,
+    },
+    localContextTitle: `${cityName}-specific sensitivities`,
+    localContextParagraphs,
+    zones: ajmerBundle.zones,
+    indiaRulesTitle: ajmerBundle.indiaRulesTitle,
+    indiaRulesIntro: ajmerBundle.indiaRulesIntro,
+    indiaRules: SHARED_INDIA_RULES,
+    permissionTitle: ajmerBundle.permissionTitle,
+    permissionIntro: ajmerBundle.permissionIntro,
+    permissionTriggers: SHARED_PERMISSION_TRIGGERS,
+    registrationBlock: SHARED_REGISTRATION,
+    contacts: [
+      ...sharedContactsRajasthan(),
+      {
+        id: `${slug}-district-verify`,
+        organization: `${cityName} district police / administration`,
+        role: 'Shoot permissions, large gatherings, commercial drone queries — verify current desk numbers',
+        website: 'https://www.rajasthanpolice.gov.in/',
+        note: 'Official Rajasthan Police directory lists district SP / control rooms; numbers change. Life-threatening emergencies: 112.',
+      },
+    ],
+    disclaimer: SHARED_DISCLAIMER,
+    officialLinks: ajmerBundle.officialLinks,
+  }
+}
+
+const REST_DRONE_BY_SLUG: Record<string, CityDroneBundle> = {
+  alwar: districtDroneBundle(
+    'alwar',
+    'Alwar',
+    [
+      'Alwar straddles the eastern Aravallis: Bala Quila ridges, Sariska buffers, and highway corridors toward Delhi — airspace risk mixes heritage no-fly logic with occasional low-altitude traffic.',
+      'Treat every fort, palace, and sanctuary boundary as permission-first; Digital Sky is mandatory before take-off.',
+    ],
+    [
+      'Urban Alwar and the fort zone behave like dense heritage airspace — crowds, ASI rules, and ridge winds make casual flying unsafe and often illegal.',
+      'Sariska Tiger Reserve and nearby forest buffers: assume wildlife department restrictions even when the map looks “open”.',
+      'Always load Digital Sky at your GPS; Jaipur International’s larger airspace influence is north-east — do not guess distance rings.',
+    ],
+    [
+      'Siliserh and company-bagh areas combine water bodies with public visitors — privacy and safety trump “scenic” flights.',
+      'Winter fog and summer dust reduce VLOS — if you cannot see the drone, land immediately.',
+      'Interstate highways carry fast traffic — do not launch from medians or distract drivers.',
+    ],
+  ),
+  banswara: districtDroneBundle(
+    'banswara',
+    'Banswara',
+    [
+      'Southern tribal belts and dam catchments mix forest edges with steep ghats — GPS drift and birds are real risks.',
+      'Monsoon landslips can close roads; emergency response is slower — plan flights conservatively.',
+    ],
+    [
+      'Reservoirs and tribal fair grounds may look empty but are often community-sensitive — ask local administration before filming.',
+      'Assume extra caution near Gujarat/MP approach roads — border-adjacent areas attract scrutiny.',
+      'Digital Sky first; nano class is not a free pass over people or water rescue zones.',
+    ],
+    [
+      'Weekly haats and festival nights add crowds and music stages — temporary no-fly realities even if maps look yellow.',
+      'Forest department rules may apply near reserve edges — check current circulars.',
+    ],
+  ),
+  baran: districtDroneBundle(
+    'baran',
+    'Baran',
+    [
+      'Hadoti’s eastern edge links toward Kota coaching traffic and Chambal ravines — mixed urban and riverine risk.',
+      'Small-town melās and temple peaks can concentrate crowds unpredictably.',
+    ],
+    [
+      'Fort ruins and river ghats are rarely “empty” legally — ASI and irrigation department interests overlap.',
+      'Chambal wildlife ethics extend to airspace — do not harass gharials or nesting birds.',
+      'Verify Digital Sky along NH corridors; electrical lines cross fields.',
+    ],
+    [
+      'Summer heat reduces safe battery performance — land early.',
+      'Monsoon water levels change landing options near banks.',
+    ],
+  ),
+  barmer: districtDroneBundle(
+    'barmer',
+    'Barmer',
+    [
+      'Deep western Thar: border-adjacent grids, military routes, and sparse population — enforcement can be strict even in “empty” desert.',
+      'Desert Festival and livestock fairs create temporary high-density zones.',
+    ],
+    [
+      'Do not fly toward border fencing or security infrastructure — ever.',
+      'Sandstorms reduce visibility below safe VLOS; landing on dunes can damage motors.',
+      'Check Digital Sky for any tactical airspace notices; do not rely on visual emptiness.',
+    ],
+    [
+      'Village privacy: herders and women at tanks may not want cameras overhead.',
+      'Heat stress for pilots is real — hydrate; avoid midday launches.',
+    ],
+  ),
+  bharatpur: districtDroneBundle(
+    'bharatpur',
+    'Bharatpur',
+    [
+      'Keoladeo Ghana is a protected wetland — assume strict wildlife drone bans without written forest permission.',
+      'Lohagarh and Deeg palace zones follow ASI / state heritage norms.',
+    ],
+    [
+      'Bird sanctuaries and breeding seasons: noise and rotor wash disturb wildlife — authorities enforce heavily.',
+      'Golden triangle tourist volume means police are alert near monuments.',
+      'Agra/Gwalior air corridors are not far — check map layers carefully.',
+    ],
+    [
+      'Rickshaw birding paths are low — flying above them still risks people and birds.',
+      'Fog in January affects VLOS on open fields.',
+    ],
+  ),
+  bhilwara: districtDroneBundle(
+    'bhilwara',
+    'Bhilwara',
+    [
+      'Textile-industry skylines and temple clusters — fewer famous forts but real factory chimneys and power lines.',
+      'Dust from grinding and transport affects visibility.',
+    ],
+    [
+      'Industrial areas may have private no-fly policies — security guards are not airspace lawyers; get written clearance.',
+      'Town markets get dense during shifts — avoid overflight.',
+      'Digital Sky for any open rural strip; landowner consent on farms.',
+    ],
+    [
+      'Monsoon lightning near Aravalli edges — land before storms.',
+    ],
+  ),
+  bikaner: districtDroneBundle(
+    'bikaner',
+    'Bikaner',
+    [
+      'Junagarh, camel belts, and desert fair infrastructure — mixing ASI monuments with livestock events.',
+      'Karni Mata (Deshnoke) and other shrines are devotion-first — expect moral bans on drones.',
+    ],
+    [
+      'Airport / air force influence appears in north Rajasthan maps — verify rings, not road distance.',
+      'Camel festival grounds: temporary crowd density — treat as no-fly unless officially cleared.',
+      'Open desert still needs landowner consent and green zones.',
+    ],
+    [
+      'Night cold batteries — pre-warm packs in winter.',
+    ],
+  ),
+  bundi: districtDroneBundle(
+    'bundi',
+    'Bundi',
+    [
+      'Stepwells, Taragarh, and monsoon tanks — slippery stone, bats, and tight old-city wiring.',
+      'Hadoti tourism spikes in winter; rooftops are not public flight decks.',
+    ],
+    [
+      'Heritage interiors and baori depths: tripods often restricted; drones doubly so.',
+      'Nawal Sagar ghats combine pilgrims and swimmers — no overflight.',
+      'Check Digital Sky before ridge attempts near power lines.',
+    ],
+    [
+      'Leopards occasionally near town edges — do not lure wildlife with drones.',
+    ],
+  ),
+  chittorgarh: districtDroneBundle(
+    'chittorgarh',
+    'Chittorgarh',
+    [
+      'One of India’s largest fort circuits — ASI zones, long ridges, and lightning-prone monsoon walls.',
+      'Tour buses and electric vehicles inside the complex — crowds move unpredictably.',
+    ],
+    [
+      'Assume entire fort superstructure is sensitive — film permissions are rarely casual.',
+      'Vijay Stambh and Padmini areas are iconic — enforcement mirrors other ASI no-fly norms.',
+      'Nearby Menal and Bhainsrorgarh add cliff risk — wind gusts.',
+    ],
+    [
+      'Heat on exposed walls exceeds city forecasts — shorter flights, more hydration.',
+    ],
+  ),
+  churu: districtDroneBundle(
+    'churu',
+    'Churu',
+    [
+      'Shekhawati haveli towns: painted private homes — aerial views can violate privacy even from “public” roads.',
+      'Dust storms in summer reduce VLOS dramatically.',
+    ],
+    [
+      'Many havelis are family-owned — commercial shoots need owner consent, not just street access.',
+      'Desert edge highways: high crosswinds for small drones.',
+      'Tal Chhapar wildlife circle — separate sanctuary rules if you day-trip.',
+    ],
+    [
+      'Kite festival weeks — manjha hazards for drones too.',
+    ],
+  ),
+  dausa: districtDroneBundle(
+    'dausa',
+    'Dausa',
+    [
+      'Abhaneri stepwell tourism and village temples on NH corridors — police are used to sudden crowds.',
+      'Meena hills add ghat fog and loose rocks.',
+    ],
+    [
+      'Chand Baori and Harshat Mata are protected settings — assume aerial restrictions.',
+      'Highway medians are not launchpads.',
+      'Verify Digital Sky near Jaipur approach airspace to the north-west.',
+    ],
+    [
+      'Respect village panchayat requests during melās.',
+    ],
+  ),
+  dholpur: districtDroneBundle(
+    'dholpur',
+    'Dholpur',
+    [
+      'Chambal ravines, sandstone quarries, and interstate bridges — multi-agency sensitivity.',
+      'Machkund and palace zones carry heritage and ritual traffic.',
+    ],
+    [
+      'River wildlife safaris: follow operator rules; drones usually incompatible.',
+      'Quarry faces collapse — do not hover above unstable cuts.',
+      'MP/UP border traffic — document checks can extend to equipment bags.',
+    ],
+    [
+      'Summer heat haze reduces contrast — VLOS harder than it looks.',
+    ],
+  ),
+  dungarpur: districtDroneBundle(
+    'dungarpur',
+    'Dungarpur',
+    [
+      'Green marble palaces and tribal hamlets — wetter hills mean mist and slick roads.',
+      'Forest department presence near reserve edges.',
+    ],
+    [
+      'Palace hotels may control aerial marketing rights — ask management.',
+      'Monsoon landslips on ghats — don’t chase clouds recklessly.',
+      'Gujarat border routes: police curiosity about gear is normal — carry papers.',
+    ],
+    [
+      'Adivasi photography ethics apply overhead too — consent matters.',
+    ],
+  ),
+  hanumangarh: districtDroneBundle(
+    'hanumangarh',
+    'Hanumangarh',
+    [
+      'Canal grids, Ghaggar agriculture, and Punjab-border airspace awareness — fog and stubble smoke.',
+      'Kalibangan archaeology: ASI oversight.',
+    ],
+    [
+      'Winter fog can drop below safe VLOS within minutes.',
+      'Border-adjacent grids: do not fly toward security infrastructure.',
+      'Crop-fire smoke is unpredictable — land if visibility drops.',
+    ],
+    [
+      'High-tension lines along canals — map before launch.',
+    ],
+  ),
+  jaipur: districtDroneBundle(
+    'jaipur',
+    'Jaipur',
+    [
+      'Rajasthan’s capital: Amer, Nahargarh, busy old-city cores, and growing air traffic — “empty sky” is rare near monuments.',
+      'Film shoots and weddings are common — police expect paperwork for commercial drones.',
+    ],
+    [
+      'Jaipur International Airport rings dominate north/north-west approaches — Digital Sky is non-negotiable.',
+      'City Palace, Hawa Mahal, Jantar Mantar: treat as no-fly without explicit approvals.',
+      'Do not fly over Johari/Tripolia crowds — crush and wire risk.',
+    ],
+    [
+      'Kite festivals and Diwali weeks add manjha and fireworks — extra hazards.',
+      'Heritage walks often include police presence — ask before take-off near checkpoints.',
+    ],
+  ),
+  jaisalmer: districtDroneBundle(
+    'jaisalmer',
+    'Jaisalmer',
+    [
+      'Living fort, dunes, and border tourism — military sensitivity plus sand hazards.',
+      'Desert Festival and camp clusters create temporary dense sites.',
+    ],
+    [
+      'Border roads and BSF areas: absolute no-fly.',
+      'Sand ingestion kills motors — avoid low hover in storms.',
+      'Village water points attract crowds — privacy matters.',
+    ],
+    [
+      'Camel safari routes are workplaces — don’t buzz animals.',
+    ],
+  ),
+  jalore: districtDroneBundle(
+    'jalore',
+    'Jalore',
+    [
+      'Granite fort climbs and Sundha Mata approaches — steep terrain and pilgrimage peaks.',
+      'Spice markets and marble yards add dust.',
+    ],
+    [
+      'Fort ramparts behave like ASI-risk zones — verify.',
+      'Highway toward Gujarat: check Digital Sky layers near any listed airstrip.',
+      'Heat limits safe battery performance on exposed rock.',
+    ],
+    [
+      'Monsoon lightning on hills — retreat early.',
+    ],
+  ),
+  jhalawar: districtDroneBundle(
+    'jhalawar',
+    'Jhalawar',
+    [
+      'River temples, Gagron UNESCO setting, and cave archaeology — water levels change risk profiles.',
+      'Hadoti melās add seasonal crowds.',
+    ],
+    [
+      'River ghats during Kartik snāna: assume public-safety priority — no overflight.',
+      'Cave interiors forbid drones; exteriors still need heritage checks.',
+      'Digital Sky before any rural strip flight.',
+    ],
+    [
+      'Crocodile stretches on some rivers — wildlife harassment laws apply.',
+    ],
+  ),
+  jhunjhunu: districtDroneBundle(
+    'jhunjhunu',
+    'Jhunjhunu',
+    [
+      'Shekhawati fresco towns — private haveli roofs dominate skylines; weekend Delhi traffic surges.',
+      'Mining lorries raise dust on ring roads.',
+    ],
+    [
+      'Rooftop terraces are often hotel-private — flight permission is not implied.',
+      'Desert storms in summer — sudden VLOS loss.',
+      'Kite festival periods — avoid shared air with manjha.',
+    ],
+    [
+      'Heritage hotel weddings may rent air rights — don’t assume public sky.',
+    ],
+  ),
+  jodhpur: districtDroneBundle(
+    'jodhpur',
+    'Jodhpur',
+    [
+      'Mehrangarh, blue-city density, and military airfields in the region — classic high-risk mix.',
+      'Desert wind shear near ridges.',
+    ],
+    [
+      'Assume fort and palace ASI / trust restrictions on aerial work.',
+      'Old-city wires and narrow lanes — unsafe take-off zones.',
+      'Check airport / defence circles on Digital Sky beyond visual distance cues.',
+    ],
+    [
+      'Marwar festivals and processions — dynamic crowd lines.',
+    ],
+  ),
+  karauli: districtDroneBundle(
+    'karauli',
+    'Karauli',
+    [
+      'Palace town plus Kaila Devi sanctuary approaches — faith traffic and forest edges.',
+      'Chambal ravines nearby — wildlife and bandit-history sensitivities (modern policing still tight).',
+    ],
+    [
+      'Sanctuary buffers: forest department drone norms apply.',
+      'Palace hotels may control marketing rights to aerial imagery.',
+      'Narrow ravine roads — don’t launch from unsafe shoulders.',
+    ],
+    [
+      'Navratri peaks — massive footfall; airspace is emotionally charged.',
+    ],
+  ),
+  kota: districtDroneBundle(
+    'kota',
+    'Kota',
+    [
+      'Chambal riverside, coaching-town rooftops, and bridge traffic — student crowds are dense and frequent.',
+      'Seven Wonders Park and river gardens are municipal venues — permits may apply.',
+    ],
+    [
+      'Bridges and ghats: never fly over moving traffic or swimmers.',
+      'Exam-season police deployments — extra scrutiny on unusual equipment bags.',
+      'Upstream dams and hydrology sites — utility sensitivity.',
+    ],
+    [
+      'Summer heat and river humidity — battery derating.',
+    ],
+  ),
+  nagaur: districtDroneBundle(
+    'nagaur',
+    'Nagaur',
+    [
+      'Ahichhatragarh fort, Sufi fair rhythms, and India-scale cattle fair density — dust, tents, and livestock.',
+      'Jodhpur–Bikaner highway convergence.',
+    ],
+    [
+      'Fair weeks behave like temporary cities — crowd safety bans override hobby flying.',
+      'Fort interiors and ramparts: heritage permissions.',
+      'Open desert outside town still needs Digital Sky green + landowner consent.',
+    ],
+    [
+      'Camels and horses startle — rotor noise is a welfare issue.',
+    ],
+  ),
+  pali: districtDroneBundle(
+    'pali',
+    'Pali',
+    [
+      'Ranakpur marble, Aravalli passes, and Jawai leopard belt — wildlife and temple ethics first.',
+      'Marble yards are industrial-private.',
+    ],
+    [
+      'Jawai leopard landscapes: treat as sensitive — forest department norms.',
+      'Jain temples: strict non-violence culture includes noise stress — avoid buzzing wildlife.',
+      'Nano drones near white marble can still distract pilgrims — ask management.',
+    ],
+    [
+      'Leopard tourism has ethical guidelines — baiting is illegal; drones can disturb hunts.',
+    ],
+  ),
+  pratapgarh: districtDroneBundle(
+    'pratapgarh',
+    'Pratapgarh',
+    [
+      'Young district with forested hills and tribal communities — slower emergency response.',
+      'Monsoon landslips on interior roads.',
+    ],
+    [
+      'Forest department rules may apply even on “open” looking ridges.',
+      'Ask district administration before filming villages — consent and reputation risk.',
+      'Dams and spillways: utility security awareness.',
+    ],
+    [
+      'Interior mobile coverage can be weak — don’t fly BVLOS.',
+    ],
+  ),
+  rajsamand: districtDroneBundle(
+    'rajsamand',
+    'Rajsamand',
+    [
+      'Rajsamand Lake, Kumbhalgarh wallscapes, and Nathdwara devotion — wedding traffic and tight temple rules.',
+      'Marble industry dust.',
+    ],
+    [
+      'Kumbhalgarh fort length means multiple ASI-sensitive segments — don’t hop along walls casually.',
+      'Nathdwara: assume no aerial imaging near shrine precincts.',
+      'Lake dams: irrigation / safety infrastructure — ask before flying.',
+    ],
+    [
+      'Monsoon lightning on long wall walks — exposed risk.',
+    ],
+  ),
+  'sawai-madhopur': districtDroneBundle(
+    'sawai-madhopur',
+    'Sawai Madhopur',
+    [
+      'Ranthambhore tiger reserve and UNESCO fort — absolute wildlife priority; drones and national parks rarely mix.',
+      'Railway-town movement and safari jeep clusters.',
+    ],
+    [
+      'Never launch toward park core / buffer rules — fines and seizure are real.',
+      'Fort viewpoints still attract crowds — safety-first.',
+      'Train stunts and crossings: never fly near tracks.',
+    ],
+    [
+      'Tiger tourism ethics: silence and distance — drones violate both.',
+    ],
+  ),
+  sikar: districtDroneBundle(
+    'sikar',
+    'Sikar',
+    [
+      'Laxmangarh fort skyline, Shekhawati havelis, and agrarian grids — weekend traffic from Jaipur.',
+      'Fog and dust alternate by season.',
+    ],
+    [
+      'Private haveli museums control commercial imagery — aerial counts.',
+      'NH congestion — don’t launch from road shoulders.',
+      'Digital Sky near Jaipur airspace influence.',
+    ],
+    [
+      'Kite season — cord hazards.',
+    ],
+  ),
+  sirohi: districtDroneBundle(
+    'sirohi',
+    'Sirohi',
+    [
+      'Mount Abu ghat roads, Dilwara marble, and Gujarat-border movement — mist, landslip risk, and temple strictness.',
+      'Cooler climate doesn’t mean open airspace.',
+    ],
+    [
+      'Hill station crowds and forest sanctuary buffers — check forest circulars.',
+      'Dilwara: assume strict no-fly for sanctity and marble safety.',
+      'Ghat roads: no launching from blind curves.',
+    ],
+    [
+      'Monsoon: leeches and slick stone — secure footing before flying.',
+    ],
+  ),
+  'sri-ganganagar': districtDroneBundle(
+    'sri-ganganagar',
+    'Sri Ganganagar',
+    [
+      'Canal grids, Punjab-border culture, and extreme winter fog — agricultural burning affects visibility.',
+      'Large open fields tempt hobby pilots; land rights still matter.',
+    ],
+    [
+      'Fog can drop below legal VLOS within minutes — abort if you lose sight.',
+      'Border-adjacent grids: heightened security.',
+      'High-tension lines along canals — map first.',
+    ],
+    [
+      'Harvest season smoke — rotor wash visibility issues.',
+    ],
+  ),
+  tonk: districtDroneBundle(
+    'tonk',
+    'Tonk',
+    [
+      'Nawabi lanes, mosques, and Sawai Madhopur road links — plural town with sensitive nights during Ramadan.',
+      'Smaller administration desks; verify permissions in writing for commercial work.',
+    ],
+    [
+      'Sunehri Kothi and heritage interiors: assume aerial restrictions near monuments.',
+      'Old-city wiring — unsafe launches.',
+      'Wildlife belt day-trips (Banas) carry separate forest norms.',
+    ],
+    [
+      'Procession nights — dynamic crowds; don’t add rotor noise.',
+    ],
+  ),
+  udaipur: districtDroneBundle(
+    'udaipur',
+    'Udaipur',
+    [
+      'Lake city: palaces, ghats, weddings, and boat traffic — reflections tempt pilots but crowds fill every shore.',
+      'Monsoon hill roads to Monsoon Palace add weather risk.',
+    ],
+    [
+      'City Palace and lake islands: assume no-fly without explicit approvals.',
+      'Boats and swimmers — never overfly people on water.',
+      'Dabok Airport (Udaipur) rings — Digital Sky mandatory.',
+    ],
+    [
+      'Monsoon lightning over lakes — metal ghats are unsafe shelters during storms.',
+      'Heritage hotels may claim marketing rights over lake-facing imagery — ask.',
+    ],
+  ),
+}
+
 const bySlug: Record<string, CityDroneBundle> = {
   ajmer: ajmerBundle,
+  ...REST_DRONE_BY_SLUG,
 }
 
 export function getCityDroneInfoBySlug(slug: string, cityName: string): CityDroneBundle {

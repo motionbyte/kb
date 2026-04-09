@@ -32,15 +32,18 @@ body {
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   color: var(--color-ink);
-  /* Baseline; popup scrim (`page-shell__scrim`) covers viewport */
-  background-color: var(--surface-backdrop);
+  /* Warm base — matches parchment shell (no dark “letterbox” flash) */
+  background: var(--parchment-hero-bg);
+  background-color: var(--color-cream-warm);
 }
 
 #root {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
 }
 
 img {

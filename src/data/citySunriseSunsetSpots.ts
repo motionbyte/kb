@@ -3,7 +3,8 @@
  * Same bundle shape as Instagram spots; coordinates are approximate pin centres.
  */
 
-import type { CityInstagramSpotsBundle } from '@/data/cityInstagramSpots'
+import type { CityInstagramSpotsBundle } from '@/data/cityInstagramSpots.types'
+import { REST_SUNRISE_BY_SLUG } from '@/data/cityPhotographyCityData'
 
 const ajmerSunriseSunset: CityInstagramSpotsBundle = {
   citySlug: 'ajmer',
@@ -236,6 +237,7 @@ const ajmerSunriseSunset: CityInstagramSpotsBundle = {
 
 const bySlug: Record<string, CityInstagramSpotsBundle> = {
   ajmer: ajmerSunriseSunset,
+  ...REST_SUNRISE_BY_SLUG,
 }
 
 export function getCitySunriseSunsetSpotsBySlug(slug: string): CityInstagramSpotsBundle | undefined {

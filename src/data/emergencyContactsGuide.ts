@@ -1,3 +1,5 @@
+import { getCityBySlug } from '@/data/cities'
+
 export type EmergencyButton = {
   id: string
   label: string
@@ -115,7 +117,11 @@ const INDIA_DEFAULTS: EmergencyContactsGuideBundle = {
   ],
 }
 
-export function getEmergencyContactsGuideByCitySlug(_slug: string): EmergencyContactsGuideBundle {
-  return INDIA_DEFAULTS
+export function getEmergencyContactsGuideByCitySlug(slug: string): EmergencyContactsGuideBundle {
+  const city = getCityBySlug(slug)
+  if (!city) return INDIA_DEFAULTS
+  const b = structuredClone(INDIA_DEFAULTS)
+  b.intro.lead = `${b.intro.lead} The same all‑India numbers apply in ${city.name} district.`
+  return b
 }
 

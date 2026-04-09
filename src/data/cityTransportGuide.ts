@@ -1,3 +1,7 @@
+import { getCityBySlug } from '@/data/cities'
+import type { City } from '@/types'
+import { buildGenericCityTransportGuide } from '@/data/cityTransportGenericBundles'
+
 export type TransportKind =
   | 'local-transport'
   | 'cab-apps'
@@ -402,7 +406,20 @@ const AJMER_TRANSPORT_GUIDE: CityTransportGuide = {
   },
 }
 
+type TransportCtx = Pick<City, 'name' | 'slug' | 'region'>
+
 export function getCityTransportGuide(slug: string, kind: TransportKind): TransportGuideBundle {
   if (slug === 'ajmer') return AJMER_TRANSPORT_GUIDE[kind]
-  return AJMER_TRANSPORT_GUIDE[kind]
+  const city = getCityBySlug(slug)
+  const ctx: TransportCtx = city
+    ? { name: city.name, slug: city.slug, region: city.region }
+    : {
+        name: slug
+          .split('-')
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' '),
+        slug,
+        region: 'Rajasthan',
+      }
+  return buildGenericCityTransportGuide(ctx)[kind]
 }

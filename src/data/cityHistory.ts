@@ -3,28 +3,10 @@
  * dates for early periods are often approximate; cross-check academic sources before academic citation.
  */
 
-export type HistoryTimelineEntry = {
-  id: string
-  years: string
-  rulerOrEra: string
-  work: string
-}
+import type { CityHistoryBundle } from '@/data/cityHistory.types'
+import { REST_CITY_HISTORIES } from '@/data/cityHistoryRest'
 
-export type HistorySection = {
-  id: string
-  eyebrow: string
-  title: string
-  paragraphs: string[]
-  timeline: HistoryTimelineEntry[]
-}
-
-export type CityHistoryBundle = {
-  citySlug: string
-  /** Short “what is this place?” — shown above the accordion stack */
-  whatIsTitle: string
-  whatIsParagraphs: string[]
-  sections: HistorySection[]
-}
+export type { CityHistoryBundle, HistorySection, HistoryTimelineEntry } from '@/data/cityHistory.types'
 
 const ajmerHistory: CityHistoryBundle = {
   citySlug: 'ajmer',
@@ -155,8 +137,114 @@ const ajmerHistory: CityHistoryBundle = {
   ],
 }
 
+const alwarHistory: CityHistoryBundle = {
+  citySlug: 'alwar',
+  whatIsTitle: 'What is Alwar?',
+  whatIsParagraphs: [
+    'Alwar sits where the Aravallis roll down toward the Delhi–Jaipur corridor — close enough to the NCR for weekend escapes, yet still unmistakably Rajasthan in its forts, sweets, and jungle edge. The district wraps ancient Matsya-country memory, medieval hill forts, and the tiger forests of Sariska in one map: Bala Quila looms over the town; Siliserh and Sagar lakes catch monsoon light; highways lead outward to Neemrana and Jaipur.',
+    'Travellers often pair the city with Sariska Tiger Reserve (jeep mornings, dry-deciduous ridges) or with Neemrana’s ridge forts — but Alwar itself rewards slow lanes: milk-cake shops, the old palace quarter, and bazaars that still feel like a former princely capital rather than a generic highway stop.',
+  ],
+  sections: [
+    {
+      id: 'puranic-ancient',
+      eyebrow: 'Puranic & ancient',
+      title: 'Matsya, Virat Nagar, epic memory',
+      paragraphs: [
+        'Mahabharata geography places the kingdom of Matsya in this belt — the “fish-country” realm where the Pandavas spent part of their ajñātavāsa (year incognito) in the court of King Virata. Traditions and modern archaeology both point to sites in and around present-day Alwar district (including Bairat / Virat Nagar) as layers of that remembered landscape — Ashokan pillars and early historic remains remind us the region was politically alive long before “Alwar” appeared on maps.',
+        'Ancient trade and pilgrimage routes crossed the eastern Aravallis toward Mathura and the Gangetic plain; local clans, temples, and tanks accumulated around strategic passes. What you see today in Alwar’s museums and fort lore is the medieval Rajput state built on those older foundations.',
+      ],
+      timeline: [
+        {
+          id: 'matsya-epic',
+          years: 'Epic memory',
+          rulerOrEra: 'Matsya kingdom (Virata)',
+          work: 'Puranic and epic texts anchor this belt in Mahabharata geography — pilgrimage and identity still echo “Matsya” in regional names and fairs.',
+        },
+        {
+          id: 'virat-bairat',
+          years: 'Ancient–early historic',
+          rulerOrEra: 'Virat Nagar / Bairat circle',
+          work: 'Archaeology around Bairat links the district to Mauryan and post-Mauryan India — coins, inscriptions, and early shrines along the Aravalli grain.',
+        },
+        {
+          id: 'regional-polities',
+          years: '1st millennium CE onward',
+          rulerOrEra: 'Regional dynasties & clan networks',
+          work: 'Successive powers — Yadava links, Gurjara-Pratihara shadow, local lineages — contested the passes and fertile pockets before the medieval fort cities of Rajasthan took shape.',
+        },
+      ],
+    },
+    {
+      id: 'medieval-early-modern',
+      eyebrow: 'Medieval & early modern',
+      title: 'Nikumbhas, Khanzadas, Mughal maps',
+      paragraphs: [
+        'From the late medieval period, the hills around Alwar were held by Rajput houses — including Nikumbha and later Khanzada lineages — who built and rebuilt Bala Quila and linked the town to the politics of Delhi and Amber. Mughal chronicles and revenue maps knew this terrain as a strategic Aravalli salient: control here secured routes between Hindustan and the Rajput principalities.',
+        'As Mughal authority thinned and Maratha networks expanded, local rulers negotiated tribute and territory; Alwar’s rulers would later style themselves as sovereigns of a compact but defensible state — fort, treasury, and forest rights bundled together.',
+      ],
+      timeline: [
+        {
+          id: 'bala-quila',
+          years: '15th–17th century (layers)',
+          rulerOrEra: 'Fort-building era',
+          work: 'Bala Quila (Alwar Fort) rises as one of the longest ridge forts in Rajasthan — a statement of hill control over the plain.',
+        },
+        {
+          id: 'mughal-maratha',
+          years: '17th–18th century',
+          rulerOrEra: 'Mughal decline / Maratha pressure',
+          work: 'Rajput states manoeuvre between imperial farmans and Pune-based military finance — prelude to East India Company paramountcy.',
+        },
+        {
+          id: 'alwar-principality',
+          years: '18th century onward',
+          rulerOrEra: 'Alwar state (Naruka / princely house)',
+          work: 'Consolidation of Alwar as a named principality with courts, armies, and treaties — the town becomes an administrative and ritual centre.',
+        },
+      ],
+    },
+    {
+      id: 'colonial-modern',
+      eyebrow: 'Colonial & modern',
+      title: 'Princely Alwar, Rajasthan state, Sariska',
+      paragraphs: [
+        'Under British paramountcy, Alwar was one of Rajasthan’s salute states — railways, Anglo-vernacular schools, and codified law arrived alongside hunting preserves that later became part of India’s wildlife story. After Independence, the princely state merged into Matsya Union and then into a larger Rajasthan; district boundaries were redrawn, but Alwar remained a hub for education, courts, and regional trade.',
+        'Today’s visitors inherit that layered past: the same ridges that held cannons now host tiger tourism in Sariska; the old capital’s lanes still sell Alwar’s famous milk cake (palang tor) while new highways connect the city to Delhi and Jaipur in a few hours.',
+      ],
+      timeline: [
+        {
+          id: 'british-paramountcy',
+          years: '19th–mid 20th century',
+          rulerOrEra: 'British India / princely treaties',
+          work: 'Indirect rule — roads, cantonment culture, and forest policy; elite hunting estates foreshadow conservation debates.',
+        },
+        {
+          id: 'independence',
+          years: '1947',
+          rulerOrEra: 'Indian Dominion',
+          work: 'Princely states accede; Alwar’s administration transitions to democratic institutions.',
+        },
+        {
+          id: 'rajasthan-merge',
+          years: '1948–1956',
+          rulerOrEra: 'Matsya Union → Rajasthan',
+          work: 'Integration into modern Rajasthan — district HQ functions, Hindi-medium institutions, and a share in state tourism branding.',
+        },
+        {
+          id: 'sariska-era',
+          years: '1978 reserve (benchmark)',
+          rulerOrEra: 'Sariska Tiger Reserve',
+          work: 'Dry-deciduous forests become a flagship protected area — jeep tourism, conservation conflict, and “tiger landscape” identity for Alwar district.',
+        },
+      ],
+    },
+  ],
+}
+
 const bySlug: Record<string, CityHistoryBundle> = {
   ajmer: ajmerHistory,
+  alwar: alwarHistory,
+  ...REST_CITY_HISTORIES,
 }
 
 export function getCityHistoryBySlug(slug: string): CityHistoryBundle | undefined {

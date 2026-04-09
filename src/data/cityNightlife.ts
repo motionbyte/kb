@@ -3,6 +3,8 @@
  * taxes & alcohol extra. Verify on the venue site or Zomato/Swiggy before budgeting.
  */
 
+import { getCityLandmarkCentre } from '@/data/cityPhotographyLandmarkRows'
+
 export type NightlifeVibe = 'aesthetic' | 'royal' | 'cultural'
 
 /** 1 budget … 4 splurge */
@@ -241,7 +243,7 @@ const ajmerNightlife: CityNightlifeBundle = {
 }
 
 function genericNightlife(cityName: string, slug: string): CityNightlifeBundle {
-  const pin = { lat: 26.85, lng: 74.5 }
+  const base = getCityLandmarkCentre(slug)
   const mk = (
     id: string,
     name: string,
@@ -249,6 +251,7 @@ function genericNightlife(cityName: string, slug: string): CityNightlifeBundle {
     level: NightlifePriceLevel,
     min: number,
     max: number,
+    offsetIdx: number,
   ): NightlifeVenue => ({
     id,
     name,
@@ -256,16 +259,16 @@ function genericNightlife(cityName: string, slug: string): CityNightlifeBundle {
     priceLevel: level,
     approxForTwoInr: { min, max },
     shortPitch: `Representative ${VIBE_LABELS[vibe].toLowerCase()} option — confirm operators in ${cityName}.`,
-    address: `${cityName} city — use maps search for current pin`,
-    area: 'City centre',
+    address: `${cityName} — search maps for current venue pin near this area`,
+    area: 'City centre / hospitality belt',
     phoneDisplay: '1800-180-29',
     telDigits: '1800180029',
     website: 'https://tourism.rajasthan.gov.in/',
     menuUrl: 'https://www.zomato.com',
     cuisine: ['Multi-cuisine'],
     menuHighlights: ['Ask venue for chef’s seasonal thali', 'Local sweet'],
-    latitude: pin.lat,
-    longitude: pin.lng,
+    latitude: base.latitude + offsetIdx * 0.007,
+    longitude: base.longitude + offsetIdx * 0.005,
   })
 
   return {
@@ -277,9 +280,9 @@ function genericNightlife(cityName: string, slug: string): CityNightlifeBundle {
     ],
     disclaimer: ajmerNightlife.disclaimer,
     venues: [
-      mk('gen-aesthetic', 'Contemporary rooftop / cafe strip', 'aesthetic', 2, 800, 1600),
-      mk('gen-royal', 'Heritage hotel dining', 'royal', 3, 2000, 4500),
-      mk('gen-cultural', 'Cultural evening package', 'cultural', 3, 1500, 3500),
+      mk('gen-aesthetic', 'Contemporary rooftop / cafe strip', 'aesthetic', 2, 800, 1600, 0),
+      mk('gen-royal', 'Heritage hotel dining', 'royal', 3, 2000, 4500, 1),
+      mk('gen-cultural', 'Cultural evening package', 'cultural', 3, 1500, 3500, 2),
     ],
   }
 }

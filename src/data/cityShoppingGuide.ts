@@ -1,3 +1,7 @@
+import { getCityBySlug } from '@/data/cities'
+import type { City } from '@/types'
+import { buildGenericCityShoppingGuide } from '@/data/cityShoppingGenericBundles'
+
 export type ShoppingKind = 'local-markets' | 'handicrafts' | 'souvenirs' | 'shopping-streets'
 
 export type ShoppingSpot = {
@@ -298,7 +302,20 @@ const AJMER_SHOPPING_GUIDE: CityShoppingGuide = {
   },
 }
 
+type ShoppingCtx = Pick<City, 'name' | 'slug' | 'region'>
+
 export function getCityShoppingGuide(slug: string, kind: ShoppingKind): ShoppingGuideBundle {
   if (slug === 'ajmer') return AJMER_SHOPPING_GUIDE[kind]
-  return AJMER_SHOPPING_GUIDE[kind]
+  const city = getCityBySlug(slug)
+  const ctx: ShoppingCtx = city
+    ? { name: city.name, slug: city.slug, region: city.region }
+    : {
+        name: slug
+          .split('-')
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' '),
+        slug,
+        region: 'Rajasthan',
+      }
+  return buildGenericCityShoppingGuide(ctx)[kind]
 }

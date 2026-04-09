@@ -12,7 +12,10 @@ export function CityCulturalShowsPage() {
   const { slug } = useParams()
   const city = slug ? getCityBySlug(slug) : undefined
 
-  const bundle = useMemo(() => (slug ? getCityCulturalShowsBySlug(slug) : undefined), [slug])
+  const bundle = useMemo(() => {
+    if (!slug || !city) return undefined
+    return getCityCulturalShowsBySlug(slug)
+  }, [slug, city])
 
   if (!city) {
     return (

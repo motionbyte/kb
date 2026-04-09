@@ -37,7 +37,7 @@ export function CityAttractionsDetailedGuide({ citySlug, cityName, kind }: Props
           <header className="city-attr-detail__head">
             <span className="city-attr-detail__emoji">🕉️</span>
             <div>
-              <h3 className="city-attr-detail__name">Puranic tirths (Ajmer region)</h3>
+              <h3 className="city-attr-detail__name">Puranic tirths ({cityName} region)</h3>
               <p className="city-attr-detail__meta">Scriptural context + practical route guidance</p>
             </div>
           </header>

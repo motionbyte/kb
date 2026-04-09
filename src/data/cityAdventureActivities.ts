@@ -2,6 +2,8 @@
  * Adventure activities by category — planning copy; verify operators, permits, and season before booking.
  */
 
+import { getCityLandmarkCentre } from '@/data/cityPhotographyLandmarkRows'
+
 export type AdventureContact = {
   id: string
   label: string
@@ -382,19 +384,8 @@ const ajmerAdventure: CityAdventureActivitiesBundle = {
   ],
 }
 
-function cityPin(slug: string): { latitude: number; longitude: number } {
-  const pins: Record<string, { latitude: number; longitude: number }> = {
-    jaipur: { latitude: 26.9124, longitude: 75.7873 },
-    udaipur: { latitude: 24.5854, longitude: 73.7125 },
-    jodhpur: { latitude: 26.2389, longitude: 73.0243 },
-    bikaner: { latitude: 28.0229, longitude: 73.3119 },
-    ajmer: { latitude: 26.4499, longitude: 74.6399 },
-  }
-  return pins[slug] ?? { latitude: 26.85, longitude: 74.5 }
-}
-
 function genericAdventure(cityName: string, slug: string): CityAdventureActivitiesBundle {
-  const pin = cityPin(slug)
+  const pin = getCityLandmarkCentre(slug)
   const mk = (id: string, name: string, teaser: string, body: string[]): AdventureActivity => ({
     id,
     name,
@@ -417,8 +408,8 @@ function genericAdventure(cityName: string, slug: string): CityAdventureActiviti
     citySlug: slug,
     leadTitle: `Adventure around ${cityName}`,
     leadParagraphs: [
-      `${cityName} — category checklist for Rajasthan-style adventures. Detail for Ajmer is fully curated; other cities will gain pin-level listings over time.`,
-      'Laws, park gates, and operator licenses change — double-check before you travel.',
+      `${cityName} — category checklist for Rajasthan-style adventures in this district. Pins centre on local landmarks; verify operators, permits, and gates before you pay.`,
+      'Laws, park closures, and monsoon access change — double-check the morning you travel.',
     ],
     authorityContacts: [rajTourism, emergency],
     categories: [

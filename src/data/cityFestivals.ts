@@ -3,43 +3,15 @@
  * Dates are lunar/solar approximations; verify each year with local panchang & mosque/dargah notices.
  */
 
-export type FestivalOrigin = {
-  /** When the observance crystallized or is first clearly attested */
-  whenStarted: string
-  /** Teachers, rulers, or communities associated — rarely a single “inventor” */
-  attributedWho: string
-}
+import type { CityFestivalsBundle } from './cityFestivals.types'
+import { REST_CITY_FESTIVALS } from './cityFestivalsRest'
 
-export type FestivalEntry = {
-  id: string
-  name: string
-  teaser?: string
-  /** Why people gather; meaning in lived religion */
-  why: string[]
-  origin: FestivalOrigin
-  /** Astronomy, season, body/society — not miracle claims */
-  scientificAndSocial: string[]
-}
-
-export type FestivalCategory = {
-  id: string
-  eyebrow: string
-  title: string
-  intro: string[]
-  festivals: FestivalEntry[]
-  /**
-   * When true, nested festival rows are hidden and the panel loads live ticketed listings
-   * (lazy on open) — see `LocalEventsLivePanel`.
-   */
-  liveEvents?: boolean
-}
-
-export type CityFestivalsBundle = {
-  citySlug: string
-  leadTitle: string
-  leadParagraphs: string[]
-  categories: FestivalCategory[]
-}
+export type {
+  CityFestivalsBundle,
+  FestivalCategory,
+  FestivalEntry,
+  FestivalOrigin,
+} from './cityFestivals.types'
 
 const ajmerFestivals: CityFestivalsBundle = {
   citySlug: 'ajmer',
@@ -295,6 +267,7 @@ const ajmerFestivals: CityFestivalsBundle = {
 
 const bySlug: Record<string, CityFestivalsBundle> = {
   ajmer: ajmerFestivals,
+  ...REST_CITY_FESTIVALS,
 }
 
 export function getCityFestivalsBySlug(slug: string): CityFestivalsBundle | undefined {

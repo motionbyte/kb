@@ -1,3 +1,5 @@
+import { getCityBySlug } from '@/data/cities'
+
 export type CurrencyExchangeGuideBundle = {
   intro: {
     eyebrow: string
@@ -102,6 +104,11 @@ const AJMER_CURRENCY_GUIDE: CurrencyExchangeGuideBundle = {
 
 export function getCurrencyExchangeGuideByCitySlug(slug: string): CurrencyExchangeGuideBundle {
   if (slug === 'ajmer') return AJMER_CURRENCY_GUIDE
-  return AJMER_CURRENCY_GUIDE
+  const city = getCityBySlug(slug)
+  if (!city) return AJMER_CURRENCY_GUIDE
+  const b = structuredClone(AJMER_CURRENCY_GUIDE)
+  b.intro.lead =
+    `${b.intro.lead} In ${city.name}, use banks or authorized forex first — street touts carry the highest scam risk.`
+  return b
 }
 

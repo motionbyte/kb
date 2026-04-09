@@ -3,6 +3,9 @@
  * Numbers are for planning reference — verify on official sites before relying on them.
  */
 
+import { getCityBySlug } from '@/data/cities'
+import { LANDMARK_ROWS } from '@/data/cityPhotographyLandmarkRows'
+
 export type EmergencyLine = {
   id: string
   label: string
@@ -122,10 +125,74 @@ const ajmerSafety: CitySafetyBundle = {
   ],
 }
 
+/** Shared lines when a district does not yet have a hand-tuned block (Ajmer uses its own list). */
+const rajasthanEmergencyFallback: EmergencyLine[] = [
+  {
+    id: 'emergency-112',
+    label: 'Emergency (all-India)',
+    displayNumber: '112',
+    telDigits: '112',
+  },
+  {
+    id: 'ambulance-108',
+    label: 'Ambulance',
+    displayNumber: '108',
+    telDigits: '108',
+  },
+  {
+    id: 'tourism-raj',
+    label: 'Rajasthan Tourism (toll-free)',
+    displayNumber: '1800-180-29',
+    telDigits: '1800180029',
+  },
+  {
+    id: 'women-helpline',
+    label: 'Women helpline (all-India)',
+    displayNumber: '181',
+    telDigits: '181',
+  },
+]
+
+/**
+ * Curated fallback when live OpenStreetMap search is unavailable or returns too few rows.
+ * Map links use name + city; prefer live results when the accordion opens online.
+ */
+function defaultHospitalsForDistrict(cityName: string, slug: string): HospitalEntry[] {
+  const d = `${cityName} district`
+  return [
+    { id: `${slug}-dh`, name: `District Hospital — ${cityName}`, area: `${d} (government)` },
+    { id: `${slug}-civil`, name: `Civil Hospital — ${cityName}`, area: 'Urban core — verify on maps' },
+    { id: `${slug}-gov`, name: `Government Hospital — ${cityName}`, area: 'Municipal area' },
+    { id: `${slug}-chc`, name: `Community Health Centre — ${cityName}`, area: 'Urban / referral' },
+    { id: `${slug}-sdh`, name: `Sub-district / tehsil hospital`, area: `Near ${cityName} tehsil HQ` },
+    { id: `${slug}-mat`, name: `Women / maternity hospital — ${cityName}`, area: d },
+    { id: `${slug}-esic`, name: `ESIC / employee hospital (if present)`, area: `${cityName} town` },
+    { id: `${slug}-pvt`, name: `Private multispeciality hospital — ${cityName}`, area: 'Search locally' },
+    { id: `${slug}-nursing`, name: `Nursing home / surgical centre — ${cityName}`, area: 'Central town' },
+    { id: `${slug}-ayush`, name: `Ayush / district Ayurved hospital`, area: cityName },
+    { id: `${slug}-phc`, name: `Primary Health Centre cluster (rural)`, area: `${d} periphery` },
+    { id: `${slug}-trauma`, name: `Emergency / trauma care — nearest district facility`, area: d },
+  ]
+}
+
+function defaultSafetyBundleForSlug(slug: string): CitySafetyBundle | undefined {
+  const city = getCityBySlug(slug)
+  if (!city) return undefined
+  const rows = LANDMARK_ROWS[slug]
+  const searchLat = rows?.[0]?.[2] ?? 26.9124
+  const searchLng = rows?.[0]?.[3] ?? 75.7873
+  return {
+    emergencyLines: rajasthanEmergencyFallback,
+    searchLat,
+    searchLng,
+    hospitals: defaultHospitalsForDistrict(city.name, slug),
+  }
+}
+
 const bySlug: Record<string, CitySafetyBundle> = {
   ajmer: ajmerSafety,
 }
 
 export function getCitySafetyBySlug(slug: string): CitySafetyBundle | undefined {
-  return bySlug[slug]
+  return bySlug[slug] ?? defaultSafetyBundleForSlug(slug)
 }

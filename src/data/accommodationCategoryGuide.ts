@@ -1,3 +1,6 @@
+import { getCityBySlug } from '@/data/cities'
+import type { City } from '@/types'
+
 export type AccommodationCategory = 'hostels' | 'homestays' | 'resorts' | 'heritage' | 'camps'
 
 export type AccommodationSpot = {
@@ -483,11 +486,365 @@ const AJMER_GUIDE: CityAccommodationGuide = {
   },
 }
 
+function mq(q: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`
+}
+
+function mkSpot(
+  slug: string,
+  id: string,
+  name: string,
+  area: string,
+  typeTag: string,
+  budgetBand: string,
+  approxPrice: string,
+  addressHint: string,
+  query: string,
+  highlights: string[],
+  caution: string[],
+): AccommodationSpot {
+  return {
+    id: `${slug}-${id}`,
+    name,
+    area,
+    typeTag,
+    budgetBand,
+    approxPrice,
+    addressHint,
+    mapUrl: mq(query),
+    reviewsUrl: mq(`${query} reviews`),
+    highlights,
+    caution,
+    sourceLabel: 'Map search — verify',
+  }
+}
+
+function campSearchQueries(cityName: string, region: string): [string, string, string, string] {
+  const r = region.toLowerCase()
+  if (/desert|thar|western rajasthan|jodhpur|jaisalmer|bikaner|barmer|jalore/i.test(r)) {
+    return [
+      `desert camp ${cityName} Rajasthan`,
+      `camel safari camp ${cityName}`,
+      `luxury tent camp ${cityName}`,
+      `sand dune camp ${cityName}`,
+    ]
+  }
+  if (/lake|mewar|southern|hadoti|chambal|east|banswara|udaipur|kota|chittorgarh/i.test(r)) {
+    return [
+      `eco camp ${cityName}`,
+      `lakeside resort camp ${cityName} Rajasthan`,
+      `adventure camp ${cityName}`,
+      `tented stay ${cityName}`,
+    ]
+  }
+  return [
+    `camp ${cityName} Rajasthan`,
+    `adventure camp ${cityName}`,
+    `eco resort ${cityName}`,
+    `tent hotel ${cityName}`,
+  ]
+}
+
+function genericSpots(category: AccommodationCategory, city: City): AccommodationSpot[] {
+  const { name: cn, slug, region } = city
+  switch (category) {
+    case 'hostels':
+      return [
+        mkSpot(
+          slug,
+          'hst1',
+          `Hostels & dorms — ${cn}`,
+          cn,
+          'Hostel',
+          '$$',
+          'Approx INR 400–2500 / night (season)',
+          'Traveller lanes / near institutes',
+          `hostel ${cn} Rajasthan`,
+          ['Sort reviews by newest', 'Check curfew and locker rules'],
+          ['Party hostels can be loud — read night-noise notes'],
+        ),
+        mkSpot(
+          slug,
+          'hst2',
+          `Backpacker stays — ${cn}`,
+          cn,
+          'Backpacker',
+          '$$',
+          'Approx INR 500–2200 / night',
+          'Old city / market edges',
+          `backpacker hostel ${cn}`,
+          ['Social common areas', 'Good for solo travellers'],
+          ['Verify 24h reception in recent reviews'],
+        ),
+        mkSpot(
+          slug,
+          'hst3',
+          `Budget lodges & dorms — ${cn}`,
+          cn,
+          'Dorm / lodge',
+          '$',
+          'Approx INR 350–1200 / night',
+          'Near station or bus stand',
+          `budget lodge dormitory ${cn}`,
+          ['Lowest cash burn', 'Ask for linen policy'],
+          ['Shared facilities — hygiene varies'],
+        ),
+        mkSpot(
+          slug,
+          'hst4',
+          `Traveller PG / lodge clusters — ${cn}`,
+          cn,
+          'Lodge',
+          '$',
+          'Approx INR 400–1500 / night',
+          'Mixed — verify listing',
+          `traveller lodge ${cn} Rajasthan`,
+          ['Useful for quick transits', 'Negotiate for multi-night'],
+          ['Confirm exact room photos before paying'],
+        ),
+      ]
+    case 'homestays':
+      return [
+        mkSpot(
+          slug,
+          'hm1',
+          `Homestays — ${cn}`,
+          cn,
+          'Homestay',
+          '$$',
+          'Approx INR 900–4500 / night',
+          'Residential streets / village edge',
+          `homestay ${cn} Rajasthan`,
+          ['Host interaction when genuine', 'Ask about meals'],
+          ['Confirm private bathroom and hot water'],
+        ),
+        mkSpot(
+          slug,
+          'hm2',
+          `Farm stays & rural guest houses — ${cn}`,
+          cn,
+          'Farmstay',
+          '$$',
+          'Approx INR 1200–5000 / night',
+          'Outskirts',
+          `farm stay ${cn} Rajasthan`,
+          ['Quieter nights', 'Star visibility on clear days'],
+          ['Own transport helps — confirm road condition in monsoon'],
+        ),
+        mkSpot(
+          slug,
+          'hm3',
+          `Serviced apartments — ${cn}`,
+          cn,
+          'Apartment',
+          '$$',
+          'Varies',
+          'Neighbourhood blocks',
+          `serviced apartment ${cn} Rajasthan`,
+          ['Kitchen access sometimes', 'Families prefer'],
+          ['Verify exact tower/flat before transfer'],
+        ),
+        mkSpot(
+          slug,
+          'hm4',
+          `Family guest houses — ${cn}`,
+          cn,
+          'Guest house',
+          '$$',
+          'Approx INR 800–3500 / night',
+          'Town centre',
+          `guest house ${cn}`,
+          ['Simpler than big hotels', 'Often flexible meals'],
+          ['AC/generator claims — verify in reviews'],
+        ),
+      ]
+    case 'resorts':
+      return [
+        mkSpot(
+          slug,
+          'rs1',
+          `Resorts — ${cn}`,
+          cn,
+          'Resort',
+          '$$$',
+          'Approx INR 3500–18000 / night',
+          'Scenic / highway belt',
+          `resort ${cn} Rajasthan`,
+          ['Pools & lawns where listed', 'Compare half-board vs room-only'],
+          ['Resort fee / taxes — ask net price'],
+        ),
+        mkSpot(
+          slug,
+          'rs2',
+          `Spa & leisure resorts — ${cn}`,
+          cn,
+          'Spa resort',
+          '$$$$',
+          'Premium',
+          'Drive radius from town',
+          `spa resort ${cn}`,
+          ['Slow itineraries', 'Weekend surcharges'],
+          ['Activity inclusions — get in writing'],
+        ),
+        mkSpot(
+          slug,
+          'rs3',
+          `Luxury stays — ${region}`,
+          region,
+          'Luxury',
+          '$$$$',
+          'Varies',
+          'Destination hotels',
+          `luxury hotel resort ${cn}`,
+          ['Event calendars busy in season', 'Transfers optional'],
+          ['Compare palace hotels vs modern five-star for value'],
+        ),
+        mkSpot(
+          slug,
+          'rs4',
+          `Eco & nature resorts — ${cn}`,
+          cn,
+          'Eco resort',
+          '$$$',
+          'Varies',
+          'Green belts',
+          `eco resort ${cn} Rajasthan`,
+          ['Nature-forward', 'Good for 2+ nights'],
+          ['Wildlife buffers — follow local guidance'],
+        ),
+      ]
+    case 'heritage':
+      return [
+        mkSpot(
+          slug,
+          'hg1',
+          `Heritage hotels — ${cn}`,
+          cn,
+          'Heritage',
+          '$$$',
+          'Approx INR 4000–20000 / night',
+          'Old quarters / fort views',
+          `heritage hotel ${cn} Rajasthan`,
+          ['Courtyards & arches', 'Ask verifiable history'],
+          ['Stairs and thresholds — accessibility check'],
+        ),
+        mkSpot(
+          slug,
+          'hg2',
+          `Haveli stays — ${cn}`,
+          cn,
+          'Haveli',
+          '$$$',
+          'Varies',
+          'Historic lanes',
+          `haveli hotel ${cn}`,
+          ['Intimate scale', 'Great for photos'],
+          ['Premium pricing — compare meal plans'],
+        ),
+        mkSpot(
+          slug,
+          'hg3',
+          `Palace & fort-style hotels — ${region}`,
+          region,
+          'Palace hotel',
+          '$$$$',
+          'Luxury',
+          'Where district has inventory',
+          `palace hotel ${cn}`,
+          ['Flagship experiences', 'Book dinners early'],
+          ['Heritage room vs new wing — confirm category'],
+        ),
+        mkSpot(
+          slug,
+          'hg4',
+          `Boutique heritage — ${cn}`,
+          cn,
+          'Boutique',
+          '$$$',
+          'Varies',
+          'Central town',
+          `boutique heritage hotel ${cn}`,
+          ['Design-led', 'Smaller room count'],
+          ['Parking tight in old cores — ask hotel'],
+        ),
+      ]
+    case 'camps': {
+      const [q1, q2, q3, q4] = campSearchQueries(cn, region)
+      return [
+        mkSpot(
+          slug,
+          'cp1',
+          `Camp stays — ${cn}`,
+          cn,
+          'Camp',
+          '$$',
+          'Approx INR 1500–9000+ / night',
+          'Operator-dependent',
+          q1,
+          ['Bonfire / folk nights common in desert belts', 'Confirm inclusions'],
+          ['Ask: attached bath? power backup?'],
+        ),
+        mkSpot(
+          slug,
+          'cp2',
+          `Adventure camps — ${cn}`,
+          cn,
+          'Adventure',
+          '$$',
+          'Package-heavy',
+          'Outskirts',
+          q2,
+          ['Zip / ATV / rope where offered', 'Helmets and harness checks'],
+          ['Refund rules if weather cancels'],
+        ),
+        mkSpot(
+          slug,
+          'cp3',
+          `Luxury tents & glamping — ${region}`,
+          region,
+          'Glamping',
+          '$$$',
+          'Premium',
+          'Scenic belts',
+          q3,
+          ['Comfort + views', 'Book meals'],
+          ['Remote roads — daytime arrival safer'],
+        ),
+        mkSpot(
+          slug,
+          'cp4',
+          `More operators — ${cn}`,
+          cn,
+          'Camp cluster',
+          '$$',
+          'Varies',
+          'Compare listings',
+          q4,
+          ['Cross-check two operators before deposit', 'Share live location with someone'],
+          ['Read newest reviews for toilet/shower quality'],
+        ),
+      ]
+    }
+    default:
+      return []
+  }
+}
+
+function genericCategoryBundle(category: AccommodationCategory, city: City): AccommodationCategoryBundle {
+  const b = structuredClone(AJMER_GUIDE[category])
+  b.spotsTitle = `${b.title} — ${city.name}`
+  b.spotsLead = `Hand-verified rows are expanding. For ${city.name} (${city.region}), use these Map searches first — sort by **Newest** reviews, then confirm on the official listing or hotel call.`
+  b.spots = genericSpots(category, city)
+  return b
+}
+
 export function getAccommodationCategoryGuideByCitySlug(
   slug: string,
   category: AccommodationCategory,
 ): AccommodationCategoryBundle {
   if (slug === 'ajmer') return AJMER_GUIDE[category]
-  return AJMER_GUIDE[category]
+  const city = getCityBySlug(slug)
+  if (!city) return AJMER_GUIDE[category]
+  return genericCategoryBundle(category, city)
 }
 

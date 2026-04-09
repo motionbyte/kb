@@ -9,18 +9,6 @@ type Props = {
 export function CityHistoricalPlacesGuide({ citySlug, cityName }: Props) {
   const bundle = getHistoricalPlacesGuideByCitySlug(citySlug)
 
-  if (!bundle) {
-    return (
-      <section id="city-historical-places" className="city-page__block city-page__block--last city-historical">
-        <div className="city-historical__hero">
-          <h2 className="city-historical__hero-main">Historical places</h2>
-          <p className="city-historical__hero-sub">(Sightseeing & Attractions)</p>
-        </div>
-        <p className="city-historical__lead">Detailed historical dossier is not available for {cityName} yet.</p>
-      </section>
-    )
-  }
-
   return (
     <section
       id="city-historical-places"

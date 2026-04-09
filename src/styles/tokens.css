@@ -29,8 +29,8 @@
   --color-muted: #5c5470;
   --color-muted-light: #8a8299;
 
-  /* Modal shell */
-  --surface-backdrop: #16102a;
+  /* Modal shell — warm default so full-width layout never reads as black bars */
+  --surface-backdrop: #2a2418;
   --surface-modal: #fffefb;
   --surface-modal-edge: rgba(212, 168, 75, 0.55);
   --radius-modal: 1.35rem;

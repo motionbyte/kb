@@ -1,3 +1,6 @@
+import { getCityBySlug } from '@/data/cities'
+import type { City } from '@/types'
+
 export type PriceBand = '$' | '$$' | '$$$' | '$$$$'
 
 export type VerifiedHotel = {
@@ -143,8 +146,104 @@ const AJMER_HOTELS: HotelsGuideBundle = {
   },
 }
 
+function mapsHotelSearch(q: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`
+}
+
+function genericHotelsGuide(city: City): HotelsGuideBundle {
+  const { name: cityName, slug, region } = city
+  const hotels: VerifiedHotel[] = [
+    {
+      id: `${slug}-htl-core`,
+      name: `Hotels & guest houses — ${cityName} (map search)`,
+      area: 'City core / markets',
+      address: `Live results: “hotel ${cityName} Rajasthan” — compare distance to your daily plans.`,
+      priceBand: '$$',
+      mapUrl: mapsHotelSearch(`hotels ${cityName} Rajasthan`),
+      reviewsUrl: mapsHotelSearch(`hotels ${cityName} reviews`),
+      whyStayHere: [
+        `Fastest snapshot of what is operating this season around ${cityName}.`,
+        'Use guest photos from the last few months, not only marketing shots.',
+      ],
+      watchOut: ['Confirm taxes and breakfast/Wi‑Fi in the final quote.', 'Avoid paying 100% upfront to unknown agents.'],
+      sourceLabel: 'Map search — verify before booking',
+    },
+    {
+      id: `${slug}-htl-budget`,
+      name: `Budget lodges & economy stays — ${cityName}`,
+      area: 'Station / bus-stand belt',
+      address: 'Often denser noise but easier transport — read newest reviews for cleanliness.',
+      priceBand: '$',
+      mapUrl: mapsHotelSearch(`budget hotel lodge ${cityName} Rajasthan`),
+      reviewsUrl: mapsHotelSearch(`budget hotel ${cityName} reviews`),
+      whyStayHere: ['Useful for short transits and tight budgets.', 'Check hot water and AC claims in recent reviews.'],
+      watchOut: ['Ask to see the exact room category you are paying for.', 'Keep valuables in hotel locker when available.'],
+      sourceLabel: 'Map search — verify locally',
+    },
+    {
+      id: `${slug}-htl-rtdc`,
+      name: `RTDC / state tourism properties — ${cityName} area`,
+      area: region,
+      address: 'Search RTDC or Rajasthan tourism stays — availability varies by season.',
+      priceBand: '$$',
+      mapUrl: mapsHotelSearch(`RTDC hotel ${cityName}`),
+      reviewsUrl: mapsHotelSearch(`RTDC ${cityName} hotel reviews`),
+      whyStayHere: ['Predictable government-tourism channel for many districts.', 'Often acceptable baseline for first-time visitors.'],
+      watchOut: ['Book through official portals or known desks when possible.', 'Older properties may need room-specific checks.'],
+      sourceLabel: 'Map search — official sites preferred',
+    },
+    {
+      id: `${slug}-htl-resort`,
+      name: `Resorts & upper mid stays — near ${cityName}`,
+      area: 'Outskirts / highway access',
+      address: 'Leisure properties outside the dense core — plan transport if sightseeing is in town.',
+      priceBand: '$$$',
+      mapUrl: mapsHotelSearch(`resort ${cityName} Rajasthan`),
+      reviewsUrl: mapsHotelSearch(`resort ${cityName} reviews`),
+      whyStayHere: ['Quieter nights when you want pool/garden comfort.', 'Good for longer stays with a hired driver.'],
+      watchOut: ['Confirm meal plans and resort fees in writing.', 'Distance adds daily commute time.'],
+      sourceLabel: 'Map search — compare inclusions',
+    },
+  ]
+
+  return {
+    intro: {
+      eyebrow: 'Accommodation',
+      title: 'Hotels',
+      lead:
+        'Compare total price with taxes, read newest reviews first, and pick areas that match your route — not only the prettiest thumbnail.',
+    },
+    problem: [
+      'Quoted “best price” can exclude taxes, breakfast, or extra-bed charges.',
+      'Photos may be old; guest uploads in reviews tell the real 2025 story.',
+      'Location mistakes cost hours daily — station vs old city vs highway resort all feel different.',
+      'High-pressure touts near transit hubs push rooms you would not pick with a calm search.',
+    ],
+    solve: [
+      'Map search clusters below tuned for this district — open Reviews in a new tab.',
+      'Quick checklist for written total, inclusions, and cancellation rules.',
+      `Area strategy for ${cityName}: reduce back-and-forth driving before you lock dates.`,
+    ],
+    why: ['Hotels remain the default for most visitors.', 'Honest filters here save bad check-in days.'],
+    quickTiles: [
+      { label: 'Rule', value: 'Written total' },
+      { label: 'Proof', value: 'Newest reviews' },
+      { label: 'Safety', value: '24h desk' },
+      { label: 'Area', value: 'Match itinerary' },
+    ],
+    bookingRules: AJMER_HOTELS.bookingRules,
+    verified: {
+      title: `Hotels — ${cityName}`,
+      lead: `Tap Map / Reviews for live listings around ${cityName} (${region}). Price bands are rough — confirm on the hotel or OTA page.`,
+      hotels,
+    },
+  }
+}
+
 export function getHotelsGuideByCitySlug(slug: string): HotelsGuideBundle {
   if (slug === 'ajmer') return AJMER_HOTELS
-  return AJMER_HOTELS
+  const city = getCityBySlug(slug)
+  if (!city) return AJMER_HOTELS
+  return genericHotelsGuide(city)
 }
 

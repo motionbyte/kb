@@ -1,3 +1,5 @@
+import { getCityBySlug } from '@/data/cities'
+
 export type SimPickupProvider = 'Jio' | 'Vi' | 'Airtel' | 'Other'
 
 export type SimPickupSpot = {
@@ -161,8 +163,85 @@ const AJMER_SIM_CARDS: CitySimCardsGuideBundle = {
   ],
 }
 
+function mapsSearchQuery(q: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`
+}
+
+/** Official-style pickup guidance when we do not yet have store-by-store verification for a district. */
+function genericSimCardsGuide(cityName: string, slug: string): CitySimCardsGuideBundle {
+  return {
+    intro: {
+      eyebrow: 'Practical info',
+      title: 'SIM cards',
+      lead:
+        `Verified-style workflow for ${cityName}: prefer official carrier stores, mall counters, or Reliance Digital–style desks for eKYC. Tap Map to open a live search near your stay. If staff say “activation later”, insist on eKYC completion before you leave (Aadhaar/Passport rules apply).`,
+    },
+    quickTiles: [
+      { label: 'Bring', value: 'ID + photo' },
+      { label: 'Ask for', value: 'eKYC activation' },
+      { label: 'Search', value: `${cityName} centre` },
+      { label: 'Backup', value: 'Home delivery' },
+    ],
+    checklist: [...AJMER_SIM_CARDS.checklist],
+    spots: [
+      {
+        id: `${slug}-jio-map`,
+        provider: 'Jio',
+        name: `Jio store / Digital Xpress — ${cityName} (map search)`,
+        area: 'City / mall belt',
+        address: `Search: official Jio store or Digital Xpress mini in ${cityName}, Rajasthan`,
+        website: 'https://www.jio.com/',
+        mapUrl: mapsSearchQuery(`Jio Digital Xpress ${cityName} Rajasthan`),
+        notes: [
+          'Prefer listings on Jio’s official store locator when possible.',
+          'Confirm same-day activation before paying.',
+        ],
+        sourceLabel: 'Map search (verify locally)',
+      },
+      {
+        id: `${slug}-airtel-map`,
+        provider: 'Airtel',
+        name: `Airtel store — ${cityName} (map search)`,
+        area: 'Retail high street',
+        address: `Search Airtel store or authorized retailer in ${cityName}`,
+        website: 'https://www.airtel.in/',
+        mapUrl: mapsSearchQuery(`Airtel store ${cityName} Rajasthan`),
+        notes: ['Check Airtel Thanks app for plans before you visit.'],
+        sourceLabel: 'Map search (verify locally)',
+      },
+      {
+        id: `${slug}-vi-map`,
+        provider: 'Vi',
+        name: `Vi Store — ${cityName} (map search)`,
+        area: 'Town centre',
+        address: `Search Vi Store ${cityName} on maps or Vi’s store locator`,
+        website: 'https://www.myvi.in/',
+        mapUrl: mapsSearchQuery(`Vi store ${cityName} Rajasthan`),
+        notes: ['Coverage varies by pocket — test signal at your hotel if you can.'],
+        sourceLabel: 'Map search (verify locally)',
+      },
+      {
+        id: `${slug}-airtel-delivery`,
+        provider: 'Airtel',
+        name: `Airtel prepaid — online (PIN ${cityName})`,
+        area: 'Home / hotel delivery',
+        address: `Order to your stay in ${cityName} (PIN code required) via Airtel’s new-connection flow`,
+        website: `https://www.airtel.in/new-connection/prepaid-sim/explore/${slug}/`,
+        mapUrl: `https://www.airtel.in/new-connection/prepaid-sim/explore/${slug}/`,
+        notes: [
+          'If the city page does not load, use the generic prepaid SIM page and enter your PIN.',
+          'Activation timing depends on eKYC; keep ID ready.',
+        ],
+        sourceLabel: 'Airtel prepaid explore',
+      },
+    ],
+  }
+}
+
 export function getSimCardsGuideByCitySlug(slug: string): CitySimCardsGuideBundle | null {
   if (slug === 'ajmer') return AJMER_SIM_CARDS
-  return null
+  const city = getCityBySlug(slug)
+  if (!city) return null
+  return genericSimCardsGuide(city.name, slug)
 }
 

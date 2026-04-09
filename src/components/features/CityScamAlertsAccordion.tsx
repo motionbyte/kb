@@ -5,7 +5,12 @@ import { cn } from '@/lib/cn'
 import '@/pages/WeatherPage.css'
 import './CityScamAlertsAccordion.css'
 
-export function CityScamAlertsAccordion() {
+type Props = {
+  /** When set, lead copy names the district (all Rajasthan city pages). */
+  cityName?: string
+}
+
+export function CityScamAlertsAccordion({ cityName }: Props) {
   const categoryIds = useMemo(() => SCAM_ALERT_CATEGORIES.map((c) => c.id), [])
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
 
@@ -23,9 +28,20 @@ export function CityScamAlertsAccordion() {
         Scam alerts
       </h2>
       <p className="city-scam-guide__lead">
-        Practical red flags, what to do on the spot, and how to stay ahead — for transport, stays, food,
-        shopping, guides, temples, nightlife, and online bookings. Not legal advice; keep calm and involve
-        police (100/112) or cyber helpline (1930) when money or safety is at risk.
+        {cityName ? (
+          <>
+            Practical red flags, what to do on the spot, and how to stay ahead — for transport, stays, food,
+            shopping, guides, temples, nightlife, and online bookings in <strong>{cityName}</strong> and wider
+            Rajasthan. Not legal advice; keep calm and involve police (100/112) or cyber helpline (1930) when
+            money or safety is at risk.
+          </>
+        ) : (
+          <>
+            Practical red flags, what to do on the spot, and how to stay ahead — for transport, stays, food,
+            shopping, guides, temples, nightlife, and online bookings. Not legal advice; keep calm and involve
+            police (100/112) or cyber helpline (1930) when money or safety is at risk.
+          </>
+        )}
       </p>
 
       <div className="city-scam-guide__helplines" role="region" aria-label="Key helplines">
