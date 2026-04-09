@@ -312,12 +312,12 @@
   padding-bottom: var(--space-4);
 }
 
-/* Choose-a-city: short content — balance vertical space (avoid huge empty band below dropdown) */
+/* Choose-a-city: keep content anchored toward top (not vertically centered). */
 .page-shell__hub-scroll--city-pick {
   display: flex;
   flex-direction: column;
-  justify-content: safe center;
-  padding-top: clamp(var(--space-3), 4vh, var(--space-6));
+  justify-content: flex-start;
+  padding-top: var(--space-2);
   padding-bottom: clamp(var(--space-3), 4vh, var(--space-6));
   box-sizing: border-box;
 }
