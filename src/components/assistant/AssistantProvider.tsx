@@ -4,6 +4,7 @@ import { AssistantContext } from '@/components/assistant/assistantContext'
 import type { AssistantMessage } from '@/components/assistant/assistantTypes'
 import { AssistantDrawer } from '@/components/assistant/AssistantDrawer'
 import { AssistantFab } from '@/components/assistant/AssistantFab'
+import { RajasthanHistoryLauncher } from '@/components/assistant/RajasthanHistoryLauncher'
 
 const STORAGE_OPEN = 'kb-assistant-open'
 /** Bump when reply format changes so stale “needs API key” bubbles don’t linger. */
@@ -177,6 +178,7 @@ export function AssistantProvider({ children }: { children: ReactNode }) {
   return (
     <AssistantContext.Provider value={value}>
       {children}
+      <RajasthanHistoryLauncher />
       <AssistantFab />
       <AssistantDrawer onOpenItinerary={openItinerary} />
     </AssistantContext.Provider>
