@@ -17,7 +17,7 @@ export function MaharanaMapScene() {
         role="img"
         aria-hidden
       >
-        <title>Mewar</title>
+        <title>Rajasthan</title>
         <defs>
           <linearGradient id={`mpParchment-${uid}`} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#ede4cf" />

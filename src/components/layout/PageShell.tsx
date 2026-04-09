@@ -184,7 +184,7 @@ export function PageShell() {
           {!guideOpen ? (
             <div className="page-shell__layer page-shell__layer--landing">
               <header className="page-shell__parchment-head">
-                <p className="page-shell__parchment-title">MEWAR</p>
+                <p className="page-shell__parchment-title">RAJASTHAN</p>
                 <p className="page-shell__parchment-subtitle">Inscribed in earth &amp; blood</p>
               </header>
               <div className="page-shell__hero-gold" aria-hidden>
