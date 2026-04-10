@@ -20,6 +20,7 @@ import { CityHistoricalPlacesGuide } from '@/components/features/CityHistoricalP
 import { CityAttractionsDetailedGuide } from '@/components/features/CityAttractionsDetailedGuide'
 import { CityTransportGuide } from '@/components/features/CityTransportGuide'
 import { CityShoppingGuide } from '@/components/features/CityShoppingGuide'
+import { CityRoyalFamilyGuide } from '@/components/features/CityRoyalFamilyGuide'
 import { getCityBySlug } from '@/data/cities'
 import { getFamousPlacesByCitySlug } from '@/data/cityFamousPlaces'
 import '@/pages/WeatherPage.css'
@@ -66,6 +67,7 @@ export function CityPage() {
   const handicraftsFocus = hash === '#city-handicrafts'
   const souvenirsFocus = hash === '#city-souvenirs'
   const shoppingStreetsFocus = hash === '#city-shopping-streets'
+  const royalFamilyFocus = hash === '#city-royal-family'
 
   const famousPlaces = useMemo(() => {
     if (!slug) return []
@@ -502,6 +504,18 @@ export function CityPage() {
           <h1 className="weather-page__city">{city.name}</h1>
         </header>
         <CityShoppingGuide key={`${city.slug}-shopping-streets`} citySlug={city.slug} cityName={city.name} kind="shopping-streets" />
+      </div>
+    )
+  }
+
+  if (royalFamilyFocus) {
+    return (
+      <div className="city-page city-page--app city-page--royal-family-focus">
+        <header className="weather-page__intro city-page__intro">
+          <p className="city-page__region">{city.region}</p>
+          <h1 className="weather-page__city">{city.name}</h1>
+        </header>
+        <CityRoyalFamilyGuide citySlug={city.slug} cityName={city.name} />
       </div>
     )
   }

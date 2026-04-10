@@ -52,6 +52,7 @@ const cityLocalMarkets = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-local-ma
 const cityHandicrafts = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-handicrafts`
 const citySouvenirs = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-souvenirs`
 const cityShoppingStreets = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-shopping-streets`
+const cityRoyalFamily = (ctx: GuideMenuCtx) => `/city/${ctx.slug}#city-royal-family`
 const itineraryPlanner = (ctx: GuideMenuCtx) => `/itinerary?seed=${ctx.slug}&tab=builder`
 const itineraryPlannerBudget = (ctx: GuideMenuCtx) => `/itinerary?seed=${ctx.slug}&style=budget`
 const itineraryPlannerLuxury = (ctx: GuideMenuCtx) => `/itinerary?seed=${ctx.slug}&style=luxury`
@@ -193,6 +194,18 @@ export const GUIDE_CITY_MENU_SECTIONS: GuideMenuSection[] = [
       { id: 'handicrafts', label: 'Handicrafts', href: cityHandicrafts },
       { id: 'souvenirs', label: 'Souvenirs', href: citySouvenirs },
       { id: 'shopping-streets', label: 'Shopping streets', href: cityShoppingStreets },
+    ],
+  },
+  {
+    id: 'royal-family',
+    icon: '👑',
+    title: 'Royal Family',
+    items: [
+      {
+        id: 'royal-lineage',
+        label: 'Lineage, timeline & family tree',
+        href: cityRoyalFamily,
+      },
     ],
   },
 ]
